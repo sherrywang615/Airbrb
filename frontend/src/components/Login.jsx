@@ -1,18 +1,17 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-// import { Link } from 'react-router-dom';
-// import Button from 'react-bootstrap/Button';
-// import Form from 'react-bootstrap/Form';
-// import { useNavigate } from 'react-router-dom';
-
-// import TextField from '@mui/material/TextField';
-// import Box from '@mui/material/Box';
-// import Button from '@mui/material/Button';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 function Login (props) {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const navigate = useNavigate();
+  const [show, setShow] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState('');
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const login = (e) => {
     fetch('http://localhost:5005/user/auth/login', {
@@ -26,6 +25,8 @@ function Login (props) {
       .then((data) => {
         if (data.error) {
           console.log(data.error);
+          setErrorMessage(data.error);
+          handleShow();
         } else {
           if (data.token) {
             localStorage.setItem('token', data.token);
@@ -54,6 +55,18 @@ function Login (props) {
       />
       <br />
       <button onClick={login}>Login</button>
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Error</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Login Failed: {errorMessage}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }
