@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
 
 function Login (props) {
   const [email, setEmail] = React.useState('');
@@ -35,26 +36,37 @@ function Login (props) {
           }
         }
       });
-  }
+  };
 
   return (
     <>
       <h2>Login</h2>
-      Email:{' '}
-      <input
-        type='text'
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <br />
-      Password:{' '}
-      <input
-        type='password'
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <br />
-      <button onClick={login}>Login</button>
+      <Form>
+        <Form.Group className='mb-3' controlId='formBasicEmail'>
+          <Form.Label>Email:</Form.Label>
+          <Form.Control
+            className='w-50'
+            type='email'
+            placeholder='Enter email'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </Form.Group>
+
+        <Form.Group className='mb-3' controlId='formBasicPassword'>
+          <Form.Label>Password:</Form.Label>
+          <Form.Control
+            className='w-50'
+            type='password'
+            placeholder='Password'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </Form.Group>
+        <Button variant='primary' type='submit' onClick={login}>
+          Login
+        </Button>
+      </Form>
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -62,7 +74,7 @@ function Login (props) {
         </Modal.Header>
         <Modal.Body>Login Failed: {errorMessage}</Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant='secondary' onClick={handleClose}>
             Close
           </Button>
         </Modal.Footer>

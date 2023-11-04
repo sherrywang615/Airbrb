@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
 
 function Register (props) {
   const [email, setEmail] = React.useState('');
@@ -47,35 +48,54 @@ function Register (props) {
   return (
     <>
       <h2>Register</h2>
-      Email:{' '}
-      <input
-        type='text'
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <br />
-      Password:{' '}
-      <input
-        type='password'
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <br />
-      Confirm Password:{' '}
-      <input
-        type='password'
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-      />
-      <br />
-      Name:{' '}
-      <input
-        type='text'
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <br />
-      <button onClick={register}>Register</button>
+      <Form>
+        <Form.Group className='mb-2' controlId='formBasicEmail'>
+          <Form.Label>Email:</Form.Label>
+          <Form.Control
+            className='w-50'
+            type='email'
+            placeholder='Enter email'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </Form.Group>
+
+        <Form.Group className='mb-2' controlId='formBasicName'>
+          <Form.Label>Name:</Form.Label>
+          <Form.Control
+            className='w-50'
+            type='text'
+            placeholder='Enter name'
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </Form.Group>
+
+        <Form.Group className='mb-2' controlId='formBasicPassword'>
+          <Form.Label>Password:</Form.Label>
+          <Form.Control
+            className='w-50'
+            type='password'
+            placeholder='Password'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </Form.Group>
+
+        <Form.Group className='mb-3' controlId='formBasicEmail'>
+          <Form.Label>Confirm Password:</Form.Label>
+          <Form.Control
+            className='w-50'
+            type='password'
+            placeholder='Confirm Password'
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+        </Form.Group>
+        <Button variant='primary' type='submit' onClick={register}>
+          Register
+        </Button>
+      </Form>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Error</Modal.Title>
