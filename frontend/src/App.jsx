@@ -37,7 +37,7 @@ function App () {
         />
         <Route
           path='/hosted-listings'
-          element={<HostedListings token={token} setToken={setToken}/>}
+          element={<HostedListings token={token} setToken={setToken} />}
         />
       </Routes>
     </BrowserRouter>

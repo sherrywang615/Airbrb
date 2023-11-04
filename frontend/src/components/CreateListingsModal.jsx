@@ -14,11 +14,14 @@ function CreateListingsModal (props) {
   const [title, setTitle] = React.useState('');
   const [address, setAddress] = React.useState('');
   const [price, setPrice] = React.useState('');
-  const [thumbnail, setThumbnail] = React.useState('');
+  const [thumbnail, setThumbnail] = React.useState(null);
   const [bathrooms, setBathrooms] = React.useState('');
   const [bedrooms, setBedrooms] = React.useState('');
   const [beds, setBeds] = React.useState('');
   const [amenities, setAmenities] = React.useState('');
+  //   const [listingId, setListingId] = React.useState('');
+  //   const [listing, setListing] = React.useState('');
+  const [listingIds, setListingIds] = React.useState([]);
   const [listings, setListings] = React.useState([]);
   const metadata = { bathrooms, bedrooms, beds, amenities };
   //   const [errorMessage, setErrorMessage] = React.useState('');
@@ -33,7 +36,7 @@ function CreateListingsModal (props) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${props.token}`
+          Authorization: `Bearer ${props.token}`,
         },
         body: JSON.stringify({
           title,
@@ -50,12 +53,51 @@ function CreateListingsModal (props) {
             // setErrorMessage(data.error);
             // handleShow();
           } else {
-            setListings([...listings, data]);
+            setListingIds((listings) => [...listings, data.listingId]);
+            handleClose();
           }
         });
     }
     setValidated(true);
   };
+
+  const getListing = (listingId) => {
+    return fetch(`http://localhost:5005/listings/${listingId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          console.log(data.error);
+          // setErrorMessage(data.error);
+          // handleShow();
+        } else {
+          return data;
+        }
+      });
+  };
+
+  //   console.log(listing);
+  React.useEffect(() => {
+    const promises = listingIds.map((listingId) => getListing(listingId));
+    Promise.all(promises).then(
+      (results) => {
+        console.log(results);
+        setListings(results);
+      }
+    );
+  }, [listingIds]);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setThumbnail(file);
+  };
+
+  console.log(listingIds);
+  console.log(listings);
 
   return (
     <>
@@ -103,8 +145,7 @@ function CreateListingsModal (props) {
               <Form.Control
                 type='file'
                 required
-                value={thumbnail}
-                onChange={(e) => setThumbnail(e.target.value)}
+                onChange={handleFileChange}
               />
             </Form.Group>
             <Form.Group className='mb-3' controlId='bathrooms'>
@@ -165,13 +206,21 @@ function CreateListingsModal (props) {
         </Modal.Footer>
       </Modal>
 
-      <div>
-        {listings.map(
-          (listing, index) => (
-            (<ListingCard key={index} />)
-          )
-        )}
-      </div>
+      {listings.map((listing) => (
+        <div key={listing.id}>
+          <ListingCard
+            key={listing.id}
+            title={listing.title}
+            address={listing.address}
+            price={listing.price}
+            // thumbnail={listing.thumbnail}
+            // bathrooms={listing.metadata.bathrooms}
+            // bedrooms={listing.metadata.bedrooms}
+            // beds={listing.metadata.beds}
+            // amenities={listing.metadata.amenities}
+          />
+        </div>
+      ))}
     </>
   );
 }
