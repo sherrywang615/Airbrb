@@ -49,7 +49,7 @@ function Register (props) {
     <>
       <h2>Register</h2>
       <Form>
-        <Form.Group className='mb-2' controlId='formBasicEmail'>
+        <Form.Group className='mb-2' controlId='registerEmail'>
           <Form.Label>Email:</Form.Label>
           <Form.Control
             className='w-50'
@@ -60,7 +60,7 @@ function Register (props) {
           />
         </Form.Group>
 
-        <Form.Group className='mb-2' controlId='formBasicName'>
+        <Form.Group className='mb-2' controlId='registerName'>
           <Form.Label>Name:</Form.Label>
           <Form.Control
             className='w-50'
@@ -71,7 +71,7 @@ function Register (props) {
           />
         </Form.Group>
 
-        <Form.Group className='mb-2' controlId='formBasicPassword'>
+        <Form.Group className='mb-2' controlId='registerPassword'>
           <Form.Label>Password:</Form.Label>
           <Form.Control
             className='w-50'
@@ -82,7 +82,7 @@ function Register (props) {
           />
         </Form.Group>
 
-        <Form.Group className='mb-3' controlId='formBasicEmail'>
+        <Form.Group className='mb-3' controlId='registerConfirmPassword'>
           <Form.Label>Confirm Password:</Form.Label>
           <Form.Control
             className='w-50'

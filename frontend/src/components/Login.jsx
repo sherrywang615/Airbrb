@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import ErrorModal from './ErrorModal';
 import Form from 'react-bootstrap/Form';
 
 function Login (props) {
@@ -68,17 +68,7 @@ function Login (props) {
         </Button>
       </Form>
 
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Error</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Login Failed: {errorMessage}</Modal.Body>
-        <Modal.Footer>
-          <Button variant='secondary' onClick={handleClose}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <ErrorModal show={show} handleClose={handleClose} errorMessage={errorMessage}/>
     </>
   );
 }
