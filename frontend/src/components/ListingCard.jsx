@@ -16,9 +16,9 @@ function ListingCard (props) {
           {props.reviews.length} reviews
         </Card.Text>
 
-        <Button variant='outline-light' size='sm' onClick={props.handleEdit}>
-          Delete
-        </Button>
+        <Button variant='outline-primary' size='sm' onClick={props.handleEdit}>
+          Edit
+        </Button>{' '}
         <Button variant='outline-danger' size='sm' onClick={props.handleDelete}>
           Delete
         </Button>

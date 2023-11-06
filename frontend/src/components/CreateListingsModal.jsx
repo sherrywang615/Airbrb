@@ -57,7 +57,8 @@ function CreateListingsModal (props) {
             setErrorMessage(data.error);
             handleErrorShow();
           } else {
-            setListingIds((listings) => [...listings, data.listingId]);
+            // setListingIds((listingIds) => [...listingIds, data.listingId]);
+            setListingIds([...listingIds, data.listingId]);
             handleClose();
           }
         });
@@ -99,12 +100,20 @@ function CreateListingsModal (props) {
           // handleShow();
         } else {
           console.log('deleted');
-          setListingIds((listings) =>
-            listings.filter((id) => id !== listingId)
+          setListingIds((listingIds) =>
+            listingIds.filter((id) => id !== listingId)
           );
+          const savedListings = localStorage.getItem('listings');
+          if (savedListings) {
+            const listingsArray = JSON.parse(savedListings);
+            const filteredListings = listingsArray.filter((listing) => listing.id !== listingId);
+            localStorage.setItem('listings', JSON.stringify(filteredListings));
+            setListings(filteredListings);
+          }
         }
       });
   };
+  console.log(localStorage.getItem('listings'));
 
   const handleEdit = (listingId) => {
     fetch(`http://localhost:5005/listings/${listingId}`, {
@@ -155,7 +164,6 @@ function CreateListingsModal (props) {
         ...listings,
         ...newListings,
       ]));
-      console.log(localStorage.getItem('listings'));
     }
   };
 
