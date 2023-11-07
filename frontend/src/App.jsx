@@ -22,7 +22,7 @@ function App () {
     <BrowserRouter>
       <NavBar token={token} setToken={setToken} />
       <Routes>
-        <Route path='/' element={<Home />} />
+        <Route path='/' element={<Home token={token}/>} />
         <Route
           path='/login'
           element={<Login token={token} setToken={setToken} />}

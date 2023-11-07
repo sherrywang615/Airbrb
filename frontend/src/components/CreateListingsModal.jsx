@@ -61,6 +61,7 @@ function CreateListingsModal (props) {
   const [showAvailability, setShowAvailability] = React.useState(false);
   const [availability, setAvailability] = React.useState([]);
   const [publishListingId, setPublishListingId] = React.useState('');
+  const [publishedListingIds, setPublishedListingIds] = React.useState([]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -292,6 +293,8 @@ function CreateListingsModal (props) {
             );
             localStorage.setItem('listings', JSON.stringify(updatedListings));
             setListings(updatedListings);
+            setPublishedListingIds([...publishedListingIds, listingId]);
+            localStorage.setItem('publishedListingIds', JSON.stringify([...publishedListingIds, listingId]));
           });
           setShowAvailability(false);
         }
