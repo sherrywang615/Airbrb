@@ -7,6 +7,7 @@ import Col from 'react-bootstrap/Col';
 import ListingCard from './ListingCard';
 import ErrorModal from './ErrorModal';
 import ListingModal from './ListingModal';
+import AvailabilityModal from './AvailabilityModal';
 
 function CreateListingsModal (props) {
   const [validated, setValidated] = React.useState(false);
@@ -51,12 +52,24 @@ function CreateListingsModal (props) {
     postcode: editPostcode,
     country: editCountry,
   };
-  const editMetadata = { bathrooms: editBathrooms, bedrooms: editBedrooms, beds: editBeds, amenities: editAmenities };
+  const editMetadata = {
+    bathrooms: editBathrooms,
+    bedrooms: editBedrooms,
+    beds: editBeds,
+    amenities: editAmenities,
+  };
+  const [showAvailability, setShowAvailability] = React.useState(false);
+  const [availability, setAvailability] = React.useState([]);
+  const [publishListingId, setPublishListingId] = React.useState('');
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const handleErrorShow = () => setErrorShow(true);
   const handleErrorClose = () => setErrorShow(false);
+  const handleAvailabilityShow = (listingId) => {
+    setShowAvailability(true);
+    setPublishListingId(listingId);
+  }
 
   function fileToDataUrl (file) {
     const validFileTypes = ['image/jpeg', 'image/png', 'image/jpg'];
@@ -157,8 +170,8 @@ function CreateListingsModal (props) {
       .then((data) => {
         if (data.error) {
           console.log(data.error);
-          // setErrorMessage(data.error);
-          // handleShow();
+          setErrorMessage(data.error);
+          handleErrorShow();
         } else {
           console.log('deleted');
           setListingIds((listingIds) =>
@@ -196,8 +209,8 @@ function CreateListingsModal (props) {
       .then((data) => {
         if (data.error) {
           console.log(data.error);
-          // setErrorMessage(data.error);
-          // handleShow();
+          setErrorMessage(data.error);
+          handleErrorShow();
         } else {
           console.log('edited');
           getListing(listingId).then((editedListing) => {
@@ -212,9 +225,6 @@ function CreateListingsModal (props) {
         }
       });
   };
-
-  console.log(localStorage.getItem('listings'));
-  console.log(listings);
 
   React.useEffect(() => {
     const promises = listingIds.map((listingId) => getListing(listingId));
@@ -254,7 +264,39 @@ function CreateListingsModal (props) {
       setEditThumbnail(dataUrl);
     });
   };
-  console.log(listings);
+
+  // Call the api to publish a listing
+  const handleAvailabilitySubmit = (listingId) => {
+    fetch(`http://localhost:5005/listings/publish/${listingId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${props.token}`,
+      },
+      body: JSON.stringify({
+        availability: [],
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          console.log(data.error);
+          setErrorMessage(data.error);
+          handleErrorShow();
+        } else {
+          console.log('published');
+          getListing(listingId).then((publishedListing) => {
+            const savedListings = JSON.parse(localStorage.getItem('listings'));
+            const updatedListings = savedListings.map((listing) =>
+              listing.id === publishedListing.id ? publishedListing : listing
+            );
+            localStorage.setItem('listings', JSON.stringify(updatedListings));
+            setListings(updatedListings);
+          });
+          setShowAvailability(false);
+        }
+      });
+  };
 
   return (
     <>
@@ -402,6 +444,7 @@ function CreateListingsModal (props) {
         handleClose={handleErrorClose}
       />
 
+      {/* Modal for editing listings */}
       <ListingModal
         show={showEdit}
         token={token}
@@ -433,6 +476,14 @@ function CreateListingsModal (props) {
         handleSubmit={() => handleEditSubmit(editListingId)}
       />
 
+      <AvailabilityModal
+        show={showAvailability}
+        handleClose={() => setShowAvailability(false)}
+        availability={availability}
+        setAvailability={setAvailability}
+        handleAvailabilitySubmit={() => handleAvailabilitySubmit(publishListingId)}
+      />
+
       {listings.map((listing) => {
         return (
           <div key={listing.id}>
@@ -455,6 +506,7 @@ function CreateListingsModal (props) {
               reviews={listing.reviews}
               handleDelete={() => handleDelete(listing.id)}
               handleEditShow={() => handleEditShow(listing)}
+              handleAvailabilityShow={() => handleAvailabilityShow(listing.id)}
             />
           </div>
         );
