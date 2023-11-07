@@ -6,12 +6,12 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import ListingCard from './ListingCard';
 import ErrorModal from './ErrorModal';
+import ListingModal from './ListingModal';
 
 function CreateListingsModal (props) {
   const [validated, setValidated] = React.useState(false);
   const [show, setShow] = React.useState(false);
   const [title, setTitle] = React.useState('');
-  const [address, setAddress] = React.useState('');
   const [price, setPrice] = React.useState('');
   const [thumbnail, setThumbnail] = React.useState(null);
   const [bathrooms, setBathrooms] = React.useState('');
@@ -21,14 +21,49 @@ function CreateListingsModal (props) {
   const [listingIds, setListingIds] = React.useState([]);
   const [listings, setListings] = React.useState([]);
   const metadata = { bathrooms, bedrooms, beds, amenities };
+  const [street, setStreet] = React.useState('');
+  const [city, setCity] = React.useState('');
+  const [state, setState] = React.useState('');
+  const [postcode, setPostcode] = React.useState('');
+  const [country, setCountry] = React.useState('');
+  const address = { street, city, state, postcode, country };
   const token = props.token;
   const [errorMessage, setErrorMessage] = React.useState('');
   const [errorShow, setErrorShow] = React.useState(false);
+  const [showEdit, setShowEdit] = React.useState(false);
+  const [editTitle, setEditTitle] = React.useState('');
+  const [editStreet, setEditStreet] = React.useState('');
+  const [editPrice, setEditPrice] = React.useState('');
+  const [editCity, setEditCity] = React.useState('');
+  const [editState, setEditState] = React.useState('');
+  const [editCountry, setEditCountry] = React.useState('');
+  const [editAmenities, setEditAmenities] = React.useState('');
+  const [editBedrooms, setEditBedrooms] = React.useState('');
+  const [editPostcode, setEditPostcode] = React.useState('');
+  const [editBeds, setEditBeds] = React.useState('');
+  const [editBathrooms, setEditBathrooms] = React.useState('');
+  const [editThumbnail, setEditThumbnail] = React.useState('');
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const handleErrorShow = () => setErrorShow(true);
   const handleErrorClose = () => setErrorShow(false);
+
+  const handleEditShow = (listing) => {
+    setShowEdit(true);
+    setEditTitle(listing.title);
+    setEditPrice(listing.price);
+    setEditThumbnail(listing.thumbnail);
+    setEditBathrooms(listing.metadata.bathrooms);
+    setEditBedrooms(listing.metadata.bedrooms);
+    setEditBeds(listing.metadata.beds);
+    setEditAmenities(listing.metadata.amenities);
+    setEditStreet(listing.address.street);
+    setEditCity(listing.address.city);
+    setEditState(listing.address.state);
+    setEditPostcode(listing.address.postcode);
+    setEditCountry(listing.address.country);
+  };
 
   const handleSubmit = (event) => {
     const form = event.currentTarget;
@@ -57,7 +92,6 @@ function CreateListingsModal (props) {
             setErrorMessage(data.error);
             handleErrorShow();
           } else {
-            // setListingIds((listingIds) => [...listingIds, data.listingId]);
             setListingIds([...listingIds, data.listingId]);
             handleClose();
           }
@@ -106,41 +140,42 @@ function CreateListingsModal (props) {
           const savedListings = localStorage.getItem('listings');
           if (savedListings) {
             const listingsArray = JSON.parse(savedListings);
-            const filteredListings = listingsArray.filter((listing) => listing.id !== listingId);
+            const filteredListings = listingsArray.filter(
+              (listing) => listing.id !== listingId
+            );
             localStorage.setItem('listings', JSON.stringify(filteredListings));
             setListings(filteredListings);
           }
         }
       });
   };
-  console.log(localStorage.getItem('listings'));
 
-  const handleEdit = (listingId) => {
-    fetch(`http://localhost:5005/listings/${listingId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${props.token}`,
-      },
-      body: JSON.stringify({
-        title,
-        address,
-        price,
-        thumbnail,
-        metadata,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) {
-          console.log(data.error);
-          // setErrorMessage(data.error);
-          // handleShow();
-        } else {
-          console.log('edited');
-        }
-      });
-  };
+  // const handleEdit = (listingId) => {
+  //   fetch(`http://localhost:5005/listings/${listingId}`, {
+  //     method: 'PUT',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: `Bearer ${props.token}`,
+  //     },
+  //     body: JSON.stringify({
+  //       title,
+  //       address,
+  //       price,
+  //       thumbnail,
+  //       metadata,
+  //     }),
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       if (data.error) {
+  //         console.log(data.error);
+  //         // setErrorMessage(data.error);
+  //         // handleShow();
+  //       } else {
+  //         console.log('edited');
+  //       }
+  //     });
+  // };
 
   React.useEffect(() => {
     const promises = listingIds.map((listingId) => getListing(listingId));
@@ -160,10 +195,10 @@ function CreateListingsModal (props) {
   const updateListings = (newListings) => {
     if (newListings.length > 0) {
       setListings([...listings, ...newListings]);
-      localStorage.setItem('listings', JSON.stringify([
-        ...listings,
-        ...newListings,
-      ]));
+      localStorage.setItem(
+        'listings',
+        JSON.stringify([...listings, ...newListings])
+      );
     }
   };
 
@@ -172,8 +207,6 @@ function CreateListingsModal (props) {
     setThumbnail(file);
   };
 
-  console.log(localStorage.getItem('listings'));
-  console.log(listings);
   return (
     <>
       <Button variant='primary' onClick={handleShow}>
@@ -195,16 +228,53 @@ function CreateListingsModal (props) {
                 onChange={(e) => setTitle(e.target.value)}
               />
             </Form.Group>
-            <Form.Group className='mb-3' controlId='address'>
-              <Form.Label>Address:</Form.Label>
+            <Form.Group className='mb-3' controlId='formGridAddress2'>
+              <Form.Label>Street</Form.Label>
               <Form.Control
-                type='text'
-                placeholder='Listing address'
-                value={address}
+                value={street}
+                placeholder='e.g. 1 Kensington Street'
                 required
-                onChange={(e) => setAddress(e.target.value)}
+                onChange={(e) => setStreet(e.target.value)}
               />
             </Form.Group>
+
+            <Row className='mb-4'>
+              <Form.Group as={Col} controlId='formGridCity'>
+                <Form.Label>City</Form.Label>
+                <Form.Control
+                  value={city}
+                  required
+                  onChange={(e) => setCity(e.target.value)}
+                />
+              </Form.Group>
+
+              <Form.Group as={Col} controlId='formGridState'>
+                <Form.Label>State</Form.Label>
+                <Form.Control
+                  value={state}
+                  required
+                  onChange={(e) => setState(e.target.value)}
+                />
+              </Form.Group>
+
+              <Form.Group as={Col} controlId='formGridPostcode'>
+                <Form.Label>Postcode</Form.Label>
+                <Form.Control
+                  value={postcode}
+                  required
+                  onChange={(e) => setPostcode(e.target.value)}
+                />
+              </Form.Group>
+
+              <Form.Group as={Col} controlId='formGridCountry'>
+                <Form.Label>Country</Form.Label>
+                <Form.Control
+                  value={country}
+                  required
+                  onChange={(e) => setCountry(e.target.value)}
+                />
+              </Form.Group>
+            </Row>
             <Form.Group className='mb-3' controlId='price'>
               <Form.Label>Price (per night):</Form.Label>
               <Form.Control
@@ -283,6 +353,35 @@ function CreateListingsModal (props) {
         handleClose={handleErrorClose}
       />
 
+      <ListingModal
+        show={showEdit}
+        handleClose={() => setShowEdit(false)}
+        title={editTitle}
+        street={editStreet}
+        city={editCity}
+        state={editState}
+        postcode={editPostcode}
+        country={editCountry}
+        price={editPrice}
+        thumbnail={editThumbnail}
+        bathrooms={editBathrooms}
+        bedrooms={editBedrooms}
+        beds={editBeds}
+        amenities={editAmenities}
+        setTitle={setEditTitle}
+        setAmenities={setEditAmenities}
+        setBathrooms={setEditBathrooms}
+        setBedrooms={setEditBedrooms}
+        setBeds={setEditBeds}
+        setStreet={setEditStreet}
+        setCity={setEditCity}
+        setState={setEditState}
+        setCountry={setEditCountry}
+        setPostcode={setEditPostcode}
+        setPrice={setEditPrice}
+        setThumbnail={setEditThumbnail}
+      />
+
       {listings.map((listing) => {
         return (
           <div key={listing.id}>
@@ -291,7 +390,11 @@ function CreateListingsModal (props) {
               token={token}
               listingId={listing.id}
               title={listing.title}
-              address={listing.address}
+              street={listing.address.street}
+              city={listing.address.city}
+              state={listing.address.state}
+              postcode={listing.address.postcode}
+              country={listing.address.country}
               price={listing.price}
               thumbnail={listing.thumbnail}
               bathrooms={listing.metadata.bathrooms}
@@ -300,7 +403,7 @@ function CreateListingsModal (props) {
               amenities={listing.metadata.amenities}
               reviews={listing.reviews}
               handleDelete={() => handleDelete(listing.id)}
-              handleEdit={() => handleEdit(listing.id)}
+              handleEditShow={() => handleEditShow(listing)}
             />
           </div>
         );
