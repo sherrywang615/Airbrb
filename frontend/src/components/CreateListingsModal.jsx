@@ -43,11 +43,37 @@ function CreateListingsModal (props) {
   const [editBeds, setEditBeds] = React.useState('');
   const [editBathrooms, setEditBathrooms] = React.useState('');
   const [editThumbnail, setEditThumbnail] = React.useState('');
+  const [editListingId, setEditListingId] = React.useState('');
+  const editAddress = {
+    street: editStreet,
+    city: editCity,
+    state: editState,
+    postcode: editPostcode,
+    country: editCountry,
+  };
+  const editMetadata = { bathrooms: editBathrooms, bedrooms: editBedrooms, beds: editBeds, amenities: editAmenities };
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const handleErrorShow = () => setErrorShow(true);
   const handleErrorClose = () => setErrorShow(false);
+
+  function fileToDataUrl (file) {
+    const validFileTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    const valid = validFileTypes.find((type) => type === file.type);
+    // Bad data, let's walk away.
+    if (!valid) {
+      throw Error('provided file is not a png, jpg or jpeg image.');
+    }
+
+    const reader = new FileReader();
+    const dataUrlPromise = new Promise((resolve, reject) => {
+      reader.onerror = reject;
+      reader.onload = () => resolve(reader.result);
+    });
+    reader.readAsDataURL(file);
+    return dataUrlPromise;
+  }
 
   const handleEditShow = (listing) => {
     setShowEdit(true);
@@ -63,6 +89,7 @@ function CreateListingsModal (props) {
     setEditState(listing.address.state);
     setEditPostcode(listing.address.postcode);
     setEditCountry(listing.address.country);
+    setEditListingId(listing.id);
   };
 
   const handleSubmit = (event) => {
@@ -150,32 +177,44 @@ function CreateListingsModal (props) {
       });
   };
 
-  // const handleEdit = (listingId) => {
-  //   fetch(`http://localhost:5005/listings/${listingId}`, {
-  //     method: 'PUT',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       Authorization: `Bearer ${props.token}`,
-  //     },
-  //     body: JSON.stringify({
-  //       title,
-  //       address,
-  //       price,
-  //       thumbnail,
-  //       metadata,
-  //     }),
-  //   })
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       if (data.error) {
-  //         console.log(data.error);
-  //         // setErrorMessage(data.error);
-  //         // handleShow();
-  //       } else {
-  //         console.log('edited');
-  //       }
-  //     });
-  // };
+  const handleEditSubmit = (listingId) => {
+    fetch(`http://localhost:5005/listings/${listingId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${props.token}`,
+      },
+      body: JSON.stringify({
+        title: editTitle,
+        address: editAddress,
+        price: editPrice,
+        thumbnail: editThumbnail,
+        metadata: editMetadata,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          console.log(data.error);
+          // setErrorMessage(data.error);
+          // handleShow();
+        } else {
+          console.log('edited');
+          getListing(listingId).then((editedListing) => {
+            const savedListings = JSON.parse(localStorage.getItem('listings'));
+            const updatedListings = savedListings.map((listing) =>
+              listing.id === editedListing.id ? editedListing : listing
+            );
+            localStorage.setItem('listings', JSON.stringify(updatedListings));
+            setListings(updatedListings);
+          });
+          setShowEdit(false);
+        }
+      });
+  };
+
+  console.log(localStorage.getItem('listings'));
+  console.log(listings);
 
   React.useEffect(() => {
     const promises = listingIds.map((listingId) => getListing(listingId));
@@ -204,8 +243,18 @@ function CreateListingsModal (props) {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    setThumbnail(file);
+    fileToDataUrl(file).then((dataUrl) => {
+      setThumbnail(dataUrl);
+    });
   };
+
+  const handleEditFileChange = (event) => {
+    const file = event.target.files[0];
+    fileToDataUrl(file).then((dataUrl) => {
+      setEditThumbnail(dataUrl);
+    });
+  };
+  console.log(listings);
 
   return (
     <>
@@ -355,6 +404,7 @@ function CreateListingsModal (props) {
 
       <ListingModal
         show={showEdit}
+        token={token}
         handleClose={() => setShowEdit(false)}
         title={editTitle}
         street={editStreet}
@@ -379,7 +429,8 @@ function CreateListingsModal (props) {
         setCountry={setEditCountry}
         setPostcode={setEditPostcode}
         setPrice={setEditPrice}
-        setThumbnail={setEditThumbnail}
+        handleFileChange={handleEditFileChange}
+        handleSubmit={() => handleEditSubmit(editListingId)}
       />
 
       {listings.map((listing) => {

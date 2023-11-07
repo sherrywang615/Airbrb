@@ -22,6 +22,7 @@ function NaviationBar (props) {
         } else {
           props.setToken(null);
           localStorage.removeItem('token');
+          localStorage.removeItem('listing');
           navigate('/');
         }
       });
