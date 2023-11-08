@@ -2,6 +2,7 @@ import React from 'react';
 import ErrorModal from './ErrorModal';
 import { useParams } from 'react-router-dom';
 
+// Listing details component
 function ListingDetails (props) {
   const { id } = useParams();
   const [listing, setListing] = React.useState(null);
@@ -29,6 +30,7 @@ function ListingDetails (props) {
     }
   };
 
+  // Call getListing() and set listing when component mounts
   React.useEffect(() => {
     getListing(id).then((listing) => {
       setListing(listing);
@@ -37,20 +39,40 @@ function ListingDetails (props) {
 
   return (
     <>
-      <h1>{listing.title}</h1>
-      <h4>
-        in {listing.address.street}, {listing.address.city},{' '}
-        {listing.address.state}, {listing.address.country},{' '}
-        {listing.address.postcode}
-      </h4>
-      <h5>${listing.price} AUD/night</h5>
-      <p>
-        {listing.metadata.bedrooms}{' '}
-        {listing.metadata.bedrooms > 1 ? 'bedrooms' : 'bedroom'},{' '}
-        {listing.metadata.beds} {listing.metadata.beds > 1 ? 'beds' : 'bed'},{' '}
-        {listing.metadata.bathrooms}{' '}
-        {listing.metadata.bathrooms > 1 ? 'baths' : 'bath'}
-      </p>
+      {listing
+        ? (
+        <>
+          <h1>{listing.title}</h1>
+          <h4>
+            {listing.metadata.type} in {listing.address.street},{' '}
+            {listing.address.city}, {listing.address.state},{' '}
+            {listing.address.country}, {listing.address.postcode}
+          </h4>
+          <h5>${listing.price} AUD/night</h5>
+          <p>
+            {listing.metadata.bedrooms}{' '}
+            {listing.metadata.bedrooms > 1 ? 'bedrooms' : 'bedroom'},{' '}
+            {listing.metadata.beds} {listing.metadata.beds > 1 ? 'beds' : 'bed'}
+            , {listing.metadata.bathrooms}{' '}
+            {listing.metadata.bathrooms > 1 ? 'baths' : 'bath'}
+          </p>
+          <p>Amenities: {listing.metadata.amenities}</p>
+          <h5>⭐️</h5>
+          <h5>Reviews:</h5>
+          {listing.reviews.length > 0
+            ? (
+                listing.reviews.map((review) => (
+              <p key={review.id}>{review.content}</p>
+                ))
+              )
+            : (
+            <p>No reviews</p>
+              )}
+        </>
+          )
+        : (
+        <div>Loading...</div>
+          )}
 
       <ErrorModal
         errorMessage={errorMessage}

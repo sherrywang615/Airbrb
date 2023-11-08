@@ -25,10 +25,17 @@ function Home (props) {
       setErrorMessage(data.error);
       handleErrorShow();
     } else {
+      return data.listings;
+    }
+  };
+
+  // Call getAllListings() when component mounts and sort the listings in alphabetical order
+  React.useEffect(() => {
+    getAllListings().then((listings) => {
       const publishedListingIds = localStorage.getItem('publishedListingIds');
       if (publishedListingIds) {
         const publishedListingIdsArr = JSON.parse(publishedListingIds);
-        const filteredListings = data.listings.filter((listing) =>
+        const filteredListings = listings.filter((listing) =>
           publishedListingIdsArr.includes(listing.id.toString())
         );
         const sortedListings = filteredListings.sort((a, b) =>
@@ -36,12 +43,7 @@ function Home (props) {
         );
         setListings(sortedListings);
       }
-    }
-  };
-
-  // Call getAllListings() when component mounts
-  React.useEffect(() => {
-    getAllListings();
+    });
   }, []);
 
   return (

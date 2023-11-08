@@ -3,7 +3,6 @@ import Card from 'react-bootstrap/Card';
 import { Link } from 'react-router-dom';
 
 function HomeListingCard (props) {
-  console.log(props.listingId);
   return (
     <Link to={`/listing/${props.listingId}`}>
       <Card style={{ width: '18rem' }} id={props.listingId}>
@@ -11,8 +10,8 @@ function HomeListingCard (props) {
         <Card.Body>
           <Card.Title>{props.title}</Card.Title>
           <Card.Text>
-            {props.street} <br />
-            {props.city}, {props.state}, {props.postcode}, {props.country}
+            {props.street}{' '},{props.city}{' '}, {props.state},{' '}
+            {props.postcode}, {props.country}
             <br />${props.price} /night <br />
             {props.reviews.length} reviews <br />
           </Card.Text>
