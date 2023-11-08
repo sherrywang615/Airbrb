@@ -1,6 +1,8 @@
 import React from 'react';
 import ErrorModal from './ErrorModal';
 import { useParams } from 'react-router-dom';
+import BookingModal from './BookingModal';
+import Button from 'react-bootstrap/Button';
 
 // Listing details component
 function ListingDetails (props) {
@@ -10,6 +12,9 @@ function ListingDetails (props) {
   const [errorShow, setErrorShow] = React.useState(false);
   const handleErrorShow = () => setErrorShow(true);
   const handleErrorClose = () => setErrorShow(false);
+  const [bookingShow, setBookingShow] = React.useState(false);
+  const handleBookingShow = () => setBookingShow(true);
+  const handleBookingClose = () => setBookingShow(false);
 
   // Call the api to get a listing
   const getListing = async (listingId) => {
@@ -59,7 +64,7 @@ function ListingDetails (props) {
           <p>Amenities: {listing.metadata.amenities}</p>
           <h5>⭐️</h5>
           <h5>Reviews:</h5>
-          {listing.reviews.length > 0
+          {listing && listing.reviews && listing.reviews.length > 0
             ? (
                 listing.reviews.map((review) => (
               <p key={review.id}>{review.content}</p>
@@ -68,6 +73,20 @@ function ListingDetails (props) {
             : (
             <p>No reviews</p>
               )}
+          {props.token !== null && (
+            <Button
+              variant='primary'
+              onClick={handleBookingShow}
+              >
+              Make a booking
+            </Button>
+          )}
+          <BookingModal
+            token={props.token}
+            show={bookingShow}
+            handleBookingClose={handleBookingClose}
+            listingId={id}
+          />
         </>
           )
         : (

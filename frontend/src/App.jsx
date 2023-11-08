@@ -40,7 +40,7 @@ function App () {
           path='/hosted-listings'
           element={<HostedListings token={token} />}
         />
-        <Route path="/listing/:id" element={<ListingDetails />} />
+        <Route path="/listing/:id" element={<ListingDetails token={token}/>} />
       </Routes>
     </BrowserRouter>
   );
