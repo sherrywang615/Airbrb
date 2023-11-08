@@ -133,7 +133,7 @@ function CreateListingsModal (props) {
             setErrorMessage(data.error);
             handleErrorShow();
           } else {
-            setListingIds([...listingIds, data.listingId]);
+            setListingIds([...new Set([...listingIds, data.listingId])]);
             handleClose();
           }
         });
@@ -244,10 +244,13 @@ function CreateListingsModal (props) {
 
   const updateListings = (newListings) => {
     if (newListings.length > 0) {
-      setListings([...listings, ...newListings]);
+      const filteredListings = newListings.filter((newListing) => {
+        return !listings.some((listing) => listing.id === newListing.id);
+      });
+      setListings([...listings, ...filteredListings]);
       localStorage.setItem(
         'listings',
-        JSON.stringify([...listings, ...newListings])
+        JSON.stringify([...listings, ...filteredListings])
       );
     }
   };
@@ -286,6 +289,7 @@ function CreateListingsModal (props) {
           handleErrorShow();
         } else {
           console.log('published');
+          setPublishedListingIds([...publishedListingIds, listingId]);
           getListing(listingId).then((publishedListing) => {
             const savedListings = JSON.parse(localStorage.getItem('listings'));
             const updatedListings = savedListings.map((listing) =>
@@ -293,13 +297,21 @@ function CreateListingsModal (props) {
             );
             localStorage.setItem('listings', JSON.stringify(updatedListings));
             setListings(updatedListings);
-            setPublishedListingIds([...publishedListingIds, listingId]);
-            localStorage.setItem('publishedListingIds', JSON.stringify([...publishedListingIds, listingId]));
+            // localStorage.setItem('publishedListingIds', JSON.stringify([...publishedListingIds, listingId]));
+            console.log(localStorage.getItem('publishedListingIds'));
           });
           setShowAvailability(false);
         }
       });
   };
+
+  React.useEffect(() => {
+    // localStorage.removeItem('listings');
+    localStorage.setItem('publishedListingIds', JSON.stringify(publishedListingIds));
+  }, [publishedListingIds]);
+
+  console.log(publishedListingIds);
+  console.log(localStorage.getItem('publishedListingIds'));
 
   return (
     <>

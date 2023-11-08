@@ -30,7 +30,10 @@ function Home (props) {
         const filteredListings = data.listings.filter((listing) =>
           publishedListingIdsArr.includes(listing.id.toString())
         );
-        setListings(filteredListings);
+        const sortedListings = filteredListings.sort((a, b) =>
+          a.title.localeCompare(b.title)
+        );
+        setListings(sortedListings);
       }
     }
   };
