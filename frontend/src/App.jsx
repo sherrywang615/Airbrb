@@ -7,6 +7,7 @@ import Home from './components/Home';
 import Dashboard from './components/Dashboard';
 import NavBar from './components/NavBar';
 import HostedListings from './components/HostedListings';
+import ListingDetails from './components/ListingDetails';
 
 function App () {
   const [token, setToken] = React.useState('');
@@ -37,8 +38,9 @@ function App () {
         />
         <Route
           path='/hosted-listings'
-          element={<HostedListings token={token} setToken={setToken} />}
+          element={<HostedListings token={token} />}
         />
+        <Route path="/listing/:id" element={<ListingDetails />} />
       </Routes>
     </BrowserRouter>
   );

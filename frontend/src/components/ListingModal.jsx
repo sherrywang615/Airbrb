@@ -70,7 +70,8 @@ function ListingModal (props) {
                 />
               </Form.Group>
             </Row>
-            <Form.Group className='mb-3' controlId='price'>
+            <Row className='mb-3'>
+            <Form.Group as={Col} controlId='price'>
               <Form.Label>Price (per night):</Form.Label>
               <Form.Control
                 type='text'
@@ -80,6 +81,17 @@ function ListingModal (props) {
                 onChange={(e) => props.setPrice(e.target.value)}
               />
             </Form.Group>
+            <Form.Group as={Col} controlId='bedrooms'>
+                <Form.Label>Property type:</Form.Label>
+                <Form.Control
+                  type='text'
+                  placeholder='apartment, house...'
+                  required
+                  value={props.type}
+                  onChange={(e) => props.setType(e.target.value)}
+                />
+              </Form.Group>
+            </Row>
             <Form.Group controlId='formFile' className='mb-3'>
               <Form.Label>Thumbnail:</Form.Label>
               <Form.Control type='file' required onChange={props.handleFileChange} />

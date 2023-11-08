@@ -22,7 +22,8 @@ function CreateListingsModal (props) {
   const [amenities, setAmenities] = React.useState('');
   const [listingIds, setListingIds] = React.useState([]);
   const [listings, setListings] = React.useState([]);
-  const metadata = { bathrooms, bedrooms, beds, amenities };
+  const [type, setType] = React.useState('');
+  const metadata = { bathrooms, bedrooms, beds, amenities, type };
   const [street, setStreet] = React.useState('');
   const [city, setCity] = React.useState('');
   const [state, setState] = React.useState('');
@@ -46,6 +47,7 @@ function CreateListingsModal (props) {
   const [editBathrooms, setEditBathrooms] = React.useState('');
   const [editThumbnail, setEditThumbnail] = React.useState('');
   const [editListingId, setEditListingId] = React.useState('');
+  const [editType, setEditType] = React.useState('');
   const editAddress = {
     street: editStreet,
     city: editCity,
@@ -58,6 +60,7 @@ function CreateListingsModal (props) {
     bedrooms: editBedrooms,
     beds: editBeds,
     amenities: editAmenities,
+    type: editType,
   };
   const [showAvailability, setShowAvailability] = React.useState(false);
   const [availability, setAvailability] = React.useState([]);
@@ -138,6 +141,7 @@ function CreateListingsModal (props) {
     setEditPostcode(listing.address.postcode);
     setEditCountry(listing.address.country);
     setEditListingId(listing.id);
+    setEditType(listing.metadata.type);
   };
 
   // Handle the form submission for creating a new listing
@@ -350,7 +354,6 @@ function CreateListingsModal (props) {
 
   // when publishedListingIds changes, update the localStorage
   React.useEffect(() => {
-    // localStorage.removeItem('listings');
     localStorage.setItem('publishedListingIds', JSON.stringify(publishedListingIds));
   }, [publishedListingIds]);
 
@@ -422,7 +425,8 @@ function CreateListingsModal (props) {
                 />
               </Form.Group>
             </Row>
-            <Form.Group className='mb-3' controlId='price'>
+            <Row className='mb-3'>
+            <Form.Group as={Col} controlId='price'>
               <Form.Label>Price (per night):</Form.Label>
               <Form.Control
                 type='text'
@@ -432,6 +436,17 @@ function CreateListingsModal (props) {
                 onChange={(e) => setPrice(e.target.value)}
               />
             </Form.Group>
+            <Form.Group as={Col} controlId='bedrooms'>
+                <Form.Label>Property type:</Form.Label>
+                <Form.Control
+                  type='text'
+                  placeholder='apartment, house...'
+                  required
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                />
+              </Form.Group>
+            </Row>
             <Form.Group controlId='formFile' className='mb-3'>
               <Form.Label>Thumbnail:</Form.Label>
               <Form.Control type='file' required onChange={handleFileChange} />
@@ -512,6 +527,7 @@ function CreateListingsModal (props) {
         postcode={editPostcode}
         country={editCountry}
         price={editPrice}
+        type={editType}
         thumbnail={editThumbnail}
         bathrooms={editBathrooms}
         bedrooms={editBedrooms}
@@ -528,6 +544,7 @@ function CreateListingsModal (props) {
         setCountry={setEditCountry}
         setPostcode={setEditPostcode}
         setPrice={setEditPrice}
+        setType={setEditType}
         handleFileChange={handleEditFileChange}
         handleSubmit={() => handleEditSubmit(editListingId)}
       />
@@ -554,6 +571,7 @@ function CreateListingsModal (props) {
               postcode={listing.address.postcode}
               country={listing.address.country}
               price={listing.price}
+              type={listing.metadata.type}
               thumbnail={listing.thumbnail}
               bathrooms={listing.metadata.bathrooms}
               bedrooms={listing.metadata.bedrooms}
@@ -564,8 +582,6 @@ function CreateListingsModal (props) {
               handleEditShow={() => handleEditShow(listing)}
               handleAvailabilityShow={() => handleAvailabilityShow(listing.id)}
               published={listing.published}
-              // showUnpublish={showUnpublish}
-              // showPublish={showPublish}
               handleUnpublishClick={() => handleUnpublishClick(listing.id)}
             />
           </div>

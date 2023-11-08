@@ -18,12 +18,13 @@ function ListingCard (props) {
       <Card.Body>
         <Card.Title>{props.title}</Card.Title>
         <Card.Text>
-          {props.street} <br />
-          {props.city}, {props.state}, {props.postcode}, {props.country}
+          {props.type} in {props.street}, {props.city}, {props.state}, {props.postcode},{' '}
+          {props.country}
           <br />${props.price} /night <br />
-          {props.bathrooms} baths, {props.bedrooms} bedrooms, {props.beds} beds{' '}
-          <br />
-          Amenities: {props.amenities} <br />
+          {props.bathrooms} {props.bathrooms > 1 ? 'baths' : 'bath'},{' '}
+          {props.bedrooms} {props.bedrooms > 1 ? 'beds' : 'bed'}, {props.beds}{' '}
+          {props.beds > 1 ? 'beds' : 'bed'} <br />
+          {props.amenities} <br />
           {props.reviews.length} reviews <br />
           <Rating name='read-only' value={avgRating} precision={0.5} readOnly />
         </Card.Text>
