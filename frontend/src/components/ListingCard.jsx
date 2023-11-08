@@ -25,19 +25,25 @@ function ListingCard (props) {
           <br />
           Amenities: {props.amenities} <br />
           {props.reviews.length} reviews <br />
-          <Rating
-            name='read-only'
-            value={avgRating}
-            precision={0.5}
-            readOnly
-          />
+          <Rating name='read-only' value={avgRating} precision={0.5} readOnly />
         </Card.Text>
-        <Button
-          variant='outline-info'
-          size='sm'
-          onClick={props.handleAvailabilityShow}>
-          Publish
-        </Button>{' '}
+        {props.published
+          ? (
+          <Button
+            variant='outline-danger'
+            size='sm'
+            onClick={props.handleUnpublishClick}>
+            Unpublish
+          </Button>
+            )
+          : (
+          <Button
+            variant='outline-info'
+            size='sm'
+            onClick={props.handleAvailabilityShow}>
+            Publish
+          </Button>
+            )}
         <Button
           variant='outline-primary'
           size='sm'

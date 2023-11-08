@@ -9,6 +9,7 @@ import ErrorModal from './ErrorModal';
 import ListingModal from './ListingModal';
 import AvailabilityModal from './AvailabilityModal';
 
+// Component for creating a new listing
 function CreateListingsModal (props) {
   const [validated, setValidated] = React.useState(false);
   const [show, setShow] = React.useState(false);
@@ -63,6 +64,7 @@ function CreateListingsModal (props) {
   const [publishListingId, setPublishListingId] = React.useState('');
   const [publishedListingIds, setPublishedListingIds] = React.useState([]);
 
+  // Modal handlers
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const handleErrorShow = () => setErrorShow(true);
@@ -72,6 +74,37 @@ function CreateListingsModal (props) {
     setPublishListingId(listingId);
   }
 
+  // Call the api to unpublish a listing and update localStorage and listings
+  const handleUnpublishClick = (listingId) => {
+    fetch(`http://localhost:5005/listings/unpublish/${listingId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${props.token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          console.log(data.error);
+          setErrorMessage(data.error);
+          handleErrorShow();
+        } else {
+          console.log('unpublished');
+          setPublishedListingIds(publishedListingIds.filter((id) => id !== listingId));
+          getListing(listingId).then((unpublishedListing) => {
+            const savedListings = JSON.parse(localStorage.getItem('listings'));
+            const updatedListings = savedListings.map((listing) =>
+              listing.id === unpublishedListing.id ? unpublishedListing : listing
+            );
+            localStorage.setItem('listings', JSON.stringify(updatedListings));
+            setListings(updatedListings);
+          });
+        }
+      });
+  }
+
+  // Function to convert file to data url
   function fileToDataUrl (file) {
     const validFileTypes = ['image/jpeg', 'image/png', 'image/jpg'];
     const valid = validFileTypes.find((type) => type === file.type);
@@ -89,6 +122,7 @@ function CreateListingsModal (props) {
     return dataUrlPromise;
   }
 
+  // Show the edit modal and populate the fields with the listing's data
   const handleEditShow = (listing) => {
     setShowEdit(true);
     setEditTitle(listing.title);
@@ -106,6 +140,7 @@ function CreateListingsModal (props) {
     setEditListingId(listing.id);
   };
 
+  // Handle the form submission for creating a new listing
   const handleSubmit = (event) => {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
@@ -141,6 +176,7 @@ function CreateListingsModal (props) {
     setValidated(true);
   };
 
+  // Call the api to get a listing
   const getListing = async (listingId) => {
     const res = await fetch(`http://localhost:5005/listings/${listingId}`, {
       method: 'GET',
@@ -159,6 +195,7 @@ function CreateListingsModal (props) {
     }
   };
 
+  // Call the api to delete a listing and update localStorage and listings
   const handleDelete = (listingId) => {
     fetch(`http://localhost:5005/listings/${listingId}`, {
       method: 'DELETE',
@@ -191,6 +228,7 @@ function CreateListingsModal (props) {
       });
   };
 
+  // Call the api to edit a listing
   const handleEditSubmit = (listingId) => {
     fetch(`http://localhost:5005/listings/${listingId}`, {
       method: 'PUT',
@@ -227,6 +265,7 @@ function CreateListingsModal (props) {
       });
   };
 
+  // when listingIds changes, update the listings
   React.useEffect(() => {
     const promises = listingIds.map((listingId) => getListing(listingId));
     Promise.all(promises).then((results) => {
@@ -234,6 +273,7 @@ function CreateListingsModal (props) {
     });
   }, [listingIds]);
 
+  // update the listings when the component mounts
   React.useEffect(() => {
     // localStorage.removeItem('listings');
     const savedListings = localStorage.getItem('listings');
@@ -242,6 +282,7 @@ function CreateListingsModal (props) {
     }
   }, []);
 
+  // update the listings
   const updateListings = (newListings) => {
     if (newListings.length > 0) {
       const filteredListings = newListings.filter((newListing) => {
@@ -255,6 +296,7 @@ function CreateListingsModal (props) {
     }
   };
 
+  // Convert the file to a data url when the file changes
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     fileToDataUrl(file).then((dataUrl) => {
@@ -262,6 +304,7 @@ function CreateListingsModal (props) {
     });
   };
 
+  // Convert the file to a data url when the file changes in the edit modal
   const handleEditFileChange = (event) => {
     const file = event.target.files[0];
     fileToDataUrl(file).then((dataUrl) => {
@@ -305,13 +348,11 @@ function CreateListingsModal (props) {
       });
   };
 
+  // when publishedListingIds changes, update the localStorage
   React.useEffect(() => {
     // localStorage.removeItem('listings');
     localStorage.setItem('publishedListingIds', JSON.stringify(publishedListingIds));
   }, [publishedListingIds]);
-
-  console.log(publishedListingIds);
-  console.log(localStorage.getItem('publishedListingIds'));
 
   return (
     <>
@@ -522,6 +563,10 @@ function CreateListingsModal (props) {
               handleDelete={() => handleDelete(listing.id)}
               handleEditShow={() => handleEditShow(listing)}
               handleAvailabilityShow={() => handleAvailabilityShow(listing.id)}
+              published={listing.published}
+              // showUnpublish={showUnpublish}
+              // showPublish={showPublish}
+              handleUnpublishClick={() => handleUnpublishClick(listing.id)}
             />
           </div>
         );

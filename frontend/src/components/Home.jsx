@@ -2,6 +2,7 @@ import React from 'react';
 import ErrorModal from './ErrorModal';
 import HomeListingCard from './HomeListingCard';
 
+// Home page component
 function Home (props) {
   const token = props.token;
   const [listings, setListings] = React.useState([]);
@@ -38,14 +39,14 @@ function Home (props) {
     }
   };
 
+  // Call getAllListings() when component mounts
   React.useEffect(() => {
     getAllListings();
   }, []);
 
   return (
     <>
-      <h2>Hi</h2>
-
+      <h2>All Listings</h2>
       <ErrorModal
         errorMessage={errorMessage}
         show={errorShow}
