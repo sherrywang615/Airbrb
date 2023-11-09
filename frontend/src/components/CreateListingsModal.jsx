@@ -357,6 +357,7 @@ function CreateListingsModal (props) {
       <Button variant='primary' onClick={handleShow}>
         Create a new listing
       </Button>
+
       <Modal
         show={show}
         aria-labelledby='contained-modal-title-vcenter'

@@ -2,6 +2,7 @@ import React from 'react';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Rating from '@mui/material/Rating';
+import { Link } from 'react-router-dom';
 
 function ListingCard (props) {
   // const rating = props.reviews.reduce((acc, review) => {
@@ -18,8 +19,8 @@ function ListingCard (props) {
       <Card.Body>
         <Card.Title>{props.title}</Card.Title>
         <Card.Text>
-          {props.type} in {props.street}, {props.city}, {props.state}, {props.postcode},{' '}
-          {props.country}
+          {props.type} in {props.street}, {props.city}, {props.state},{' '}
+          {props.postcode}, {props.country}
           <br />${props.price} /night <br />
           {props.bathrooms} {props.bathrooms > 1 ? 'baths' : 'bath'},{' '}
           {props.bedrooms} {props.bedrooms > 1 ? 'beds' : 'bed'}, {props.beds}{' '}
@@ -30,12 +31,14 @@ function ListingCard (props) {
         </Card.Text>
         {props.published
           ? (
-          <Button
-            variant='outline-danger'
-            size='sm'
-            onClick={props.handleUnpublishClick}>
-            Unpublish
-          </Button>
+          <>
+            <Button
+              variant='outline-danger'
+              size='sm'
+              onClick={props.handleUnpublishClick}>
+              Unpublish
+            </Button>{' '}
+          </>
             )
           : (
           <Button
@@ -45,6 +48,9 @@ function ListingCard (props) {
             Publish
           </Button>
             )}
+            <Link to={`/listing/${props.listingId}/bookings`}>
+            <Button variant='outline-info' size='sm'>Manage bookings</Button>{' '}
+            </Link>
         <Button
           variant='outline-primary'
           size='sm'

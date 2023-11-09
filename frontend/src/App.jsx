@@ -8,6 +8,7 @@ import Dashboard from './components/Dashboard';
 import NavBar from './components/NavBar';
 import HostedListings from './components/HostedListings';
 import ListingDetails from './components/ListingDetails';
+import BookingRequests from './components/BookingRequests';
 
 function App () {
   const [token, setToken] = React.useState('');
@@ -41,6 +42,7 @@ function App () {
           element={<HostedListings token={token} />}
         />
         <Route path="/listing/:id" element={<ListingDetails token={token}/>} />
+        <Route path="/listing/:listingId/bookings" element={<BookingRequests token={token}/>} />
       </Routes>
     </BrowserRouter>
   );
