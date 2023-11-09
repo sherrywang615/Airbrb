@@ -29,37 +29,46 @@ function ListingCard (props) {
           {props.reviews.length} reviews <br />
           <Rating name='read-only' value={avgRating} precision={0.5} readOnly />
         </Card.Text>
-        {props.published
-          ? (
-          <>
+        <>
+          <div>
+            {props.published
+              ? (
+              <Button
+                variant='outline-danger'
+                size='sm'
+                onClick={props.handleUnpublishClick}>
+                Unpublish
+              </Button>
+                )
+              : (
+              <Button
+                variant='outline-info'
+                size='sm'
+                onClick={props.handleAvailabilityShow}>
+                Publish
+              </Button>
+                )}{' '}
+            <Link to={`/listing/${props.listingId}/bookings`}>
+              <Button variant='outline-info' size='sm'>
+                Manage bookings
+              </Button>{' '}
+            </Link>
+          </div>
+          <div>
+            <Button
+              variant='outline-primary'
+              size='sm'
+              onClick={props.handleEditShow}>
+              Edit
+            </Button>{' '}
             <Button
               variant='outline-danger'
               size='sm'
-              onClick={props.handleUnpublishClick}>
-              Unpublish
-            </Button>{' '}
-          </>
-            )
-          : (
-          <Button
-            variant='outline-info'
-            size='sm'
-            onClick={props.handleAvailabilityShow}>
-            Publish
-          </Button>
-            )}
-            <Link to={`/listing/${props.listingId}/bookings`}>
-            <Button variant='outline-info' size='sm'>Manage bookings</Button>{' '}
-            </Link>
-        <Button
-          variant='outline-primary'
-          size='sm'
-          onClick={props.handleEditShow}>
-          Edit
-        </Button>{' '}
-        <Button variant='outline-danger' size='sm' onClick={props.handleDelete}>
-          Delete
-        </Button>
+              onClick={props.handleDelete}>
+              Delete
+            </Button>
+          </div>
+        </>
       </Card.Body>
     </Card>
   );

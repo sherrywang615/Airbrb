@@ -7,7 +7,9 @@ import Button from 'react-bootstrap/Button';
 // component for displaying all booking requests for a listing
 function BookingRequests (props) {
   const { listingId } = useParams();
+  const currentDate = new Date();
   const [bookingRequests, setBookingRequests] = React.useState([]);
+  const [listing, setListing] = React.useState({});
   const [errorMessage, setErrorMessage] = React.useState('');
   const [errorShow, setErrorShow] = React.useState(false);
   const handleErrorShow = () => setErrorShow(true);
@@ -94,6 +96,25 @@ function BookingRequests (props) {
     }
   };
 
+  // Call the api to get a listing
+  const getListing = async (listingId) => {
+    const res = await fetch(`http://localhost:5005/listings/${listingId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await res.json();
+    if (data.error) {
+      console.log(data.error);
+      setErrorMessage(data.error);
+      handleErrorShow();
+    } else {
+      data.listing.id = listingId;
+      return data.listing;
+    }
+  };
+
   // Get all bookings for the listing
   React.useEffect(() => {
     getAllBookings().then((bookings) => {
@@ -103,13 +124,71 @@ function BookingRequests (props) {
       );
       setBookingRequests(filteredBookings);
     });
+
+    // Get the information for the listing
+    getListing(listingId).then((listing) => {
+      setListing(listing);
+    });
   }, [listingId]);
 
-  console.log(bookingRequests);
+  // Calculate the number of days between the given date and today
+  const calculateDays = (start, end) => {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    const differenceTime = endDate - startDate;
+    const differenceDays = Math.ceil(differenceTime / (1000 * 3600 * 24));
+    return differenceDays;
+  };
+
+  // Calculate the number of days this year the listing has been booked for
+  const calculateDaysBooked = () => {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    let daysBookedThisYear = 0;
+    bookingRequests.forEach((booking) => {
+      if (booking.status === 'accepted') {
+        const startDate = new Date(booking.dateRange.start);
+        const endDate = new Date(booking.dateRange.end);
+        if (startDate.getFullYear() === currentYear) {
+          const daysBooked = calculateDays(startDate, endDate);
+          daysBookedThisYear += daysBooked;
+        }
+      }
+    });
+    return daysBookedThisYear;
+  };
+
+  // Calculate the total profit
+  const calculateTotalProfit = () => {
+    let totalProfit = 0;
+    bookingRequests.forEach((booking) => {
+      if (booking.status === 'accepted') {
+        totalProfit += booking.totalPrice;
+      }
+    });
+    return totalProfit;
+  };
+
+  console.log(listing);
 
   return (
     <>
-      <h2>Booking Requests</h2>
+      <h2>Booking Requests & Listing History </h2>
+      <p>
+        {listing.postedOn
+          ? `This listing has been up online for ${calculateDays(
+              listing.postedOn,
+              currentDate
+            )} ${
+              calculateDays(listing.postedOn, currentDate) > 1 ? 'days' : 'day'
+            }.`
+          : 'This listing is not published.'}
+      </p>
+      <p>
+        It has been booked for {calculateDaysBooked()}{' '}
+        {calculateDaysBooked() > 1 ? 'days' : 'day'} this year and your total
+        profit is ${calculateTotalProfit()} AUD.
+      </p>
       <ListGroup as='ol' numbered className='w-50'>
         {bookingRequests.map((booking) => (
           <ListGroup.Item
