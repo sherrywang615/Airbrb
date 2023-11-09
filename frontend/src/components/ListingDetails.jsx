@@ -86,6 +86,7 @@ function ListingDetails (props) {
             show={bookingShow}
             handleBookingClose={handleBookingClose}
             listingId={id}
+            price={listing.price}
           />
         </>
           )

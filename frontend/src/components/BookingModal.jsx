@@ -19,12 +19,14 @@ function BookingModal (props) {
   const handleErrorClose = () => setErrorShow(false);
 
   // Call the api to make a booking, return the booking id
-
   const makeBooking = async (listingId) => {
     const dateRange = {
       start: startDate.toISOString(),
       end: endDate.toISOString(),
     };
+    const start = new Date(dateRange.start);
+    const end = new Date(dateRange.end);
+    const nights = end.getDate() - start.getDate();
     const res = await fetch(`http://localhost:5005/bookings/new/${listingId}`, {
       method: 'POST',
       headers: {
@@ -33,7 +35,7 @@ function BookingModal (props) {
       },
       body: JSON.stringify({
         dateRange,
-        totalPrice: 800,
+        totalPrice: props.price * nights,
       }),
     });
     const data = await res.json();
