@@ -17,7 +17,6 @@ function BookingModal (props) {
   const [errorShow, setErrorShow] = React.useState(false);
   const handleErrorShow = () => setErrorShow(true);
   const handleErrorClose = () => setErrorShow(false);
-  const [bookingIds, setBookingIds] = React.useState([]);
 
   // Call the api to make a booking, return the booking id
   const makeBooking = async (listingId) => {
@@ -47,16 +46,25 @@ function BookingModal (props) {
     } else {
       console.log('Booking confirmed');
       setBookingConfirmation(true);
-      setBookingIds([...bookingIds, data.bookingId]);
+      const savedBookingIds = JSON.parse(
+        localStorage.getItem(`bookingIds/${props.token}`)
+      );
+      let updatedBookingIds = '';
+      if (savedBookingIds) {
+        updatedBookingIds = [...savedBookingIds, data.bookingId];
+      } else {
+        updatedBookingIds = [data.bookingId];
+      }
+      // setBookingIds(updatedBookingIds);
+      localStorage.setItem(
+        `bookingIds/${props.token}`,
+        JSON.stringify(updatedBookingIds)
+      );
       return data.bookingId;
     }
   };
 
-  React.useEffect(() => {
-    makeBooking(props.listingId).then((bookingId) => {
-      localStorage.setItem(`bookingIds/${props.token}`, JSON.stringify([...bookingIds, bookingId]));
-    });
-  }, [bookingConfirmation]);
+  console.log(JSON.parse(localStorage.getItem(`bookingIds/${props.token}`)));
 
   return (
     <>

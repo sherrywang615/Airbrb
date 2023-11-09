@@ -344,7 +344,6 @@ function CreateListingsModal (props) {
             );
             localStorage.setItem('listings', JSON.stringify(updatedListings));
             setListings(updatedListings);
-            console.log(localStorage.getItem('publishedListingIds'));
           });
           setShowAvailability(false);
         }

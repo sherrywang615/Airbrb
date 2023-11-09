@@ -10,15 +10,18 @@ function ListingDetails (props) {
   const [listing, setListing] = React.useState(null);
   const [errorMessage, setErrorMessage] = React.useState('');
   const [errorShow, setErrorShow] = React.useState(false);
+  const [bookingIds, setBookingIds] = React.useState([]);
   const handleErrorShow = () => setErrorShow(true);
   const handleErrorClose = () => setErrorShow(false);
   const [bookingShow, setBookingShow] = React.useState(false);
   const handleBookingShow = () => setBookingShow(true);
-  const handleBookingClose = () => setBookingShow(false);
-  const [bookingIds, setBookingIds] = React.useState([]);
-  const savedBookingIds = JSON.parse(
-    localStorage.getItem(`bookingIds/${props.token}`)
-  );
+  const handleBookingClose = () => {
+    setBookingShow(false);
+    const savedBookingIds = JSON.parse(
+      localStorage.getItem(`bookingIds/${props.token}`)
+    );
+    setBookingIds(savedBookingIds);
+  };
 
   // Call the api to get a listing
   const getListing = async (listingId) => {
@@ -44,13 +47,11 @@ function ListingDetails (props) {
     getListing(id).then((listing) => {
       setListing(listing);
     });
-    if (savedBookingIds) {
-      setBookingIds(savedBookingIds);
-    }
+    const savedBookingIds = JSON.parse(
+      localStorage.getItem(`bookingIds/${props.token}`)
+    );
+    setBookingIds(savedBookingIds);
   }, [id]);
-
-  console.log(savedBookingIds);
-  console.log(bookingIds);
 
   return (
     <>
