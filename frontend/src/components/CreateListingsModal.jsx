@@ -344,13 +344,17 @@ function CreateListingsModal (props) {
             );
             localStorage.setItem('listings', JSON.stringify(updatedListings));
             setListings(updatedListings);
-            localStorage.setItem('publishedListingIds', JSON.stringify([...publishedListingIds, listingId]));
             console.log(localStorage.getItem('publishedListingIds'));
           });
           setShowAvailability(false);
         }
       });
   };
+
+  // Update localStorage when publishedListingIds changes
+  React.useEffect(() => {
+    localStorage.setItem('publishedListingIds', JSON.stringify(publishedListingIds));
+  }, [publishedListingIds]);
 
   return (
     <>

@@ -15,6 +15,10 @@ function ListingDetails (props) {
   const [bookingShow, setBookingShow] = React.useState(false);
   const handleBookingShow = () => setBookingShow(true);
   const handleBookingClose = () => setBookingShow(false);
+  const [bookingIds, setBookingIds] = React.useState([]);
+  const savedBookingIds = JSON.parse(
+    localStorage.getItem(`bookingIds/${props.token}`)
+  );
 
   // Call the api to get a listing
   const getListing = async (listingId) => {
@@ -40,7 +44,13 @@ function ListingDetails (props) {
     getListing(id).then((listing) => {
       setListing(listing);
     });
+    if (savedBookingIds) {
+      setBookingIds(savedBookingIds);
+    }
   }, [id]);
+
+  console.log(savedBookingIds);
+  console.log(bookingIds);
 
   return (
     <>
@@ -74,10 +84,7 @@ function ListingDetails (props) {
             <p>No reviews</p>
               )}
           {props.token !== null && (
-            <Button
-              variant='primary'
-              onClick={handleBookingShow}
-              >
+            <Button variant='primary' onClick={handleBookingShow}>
               Make a booking
             </Button>
           )}
@@ -93,6 +100,11 @@ function ListingDetails (props) {
         : (
         <div>Loading...</div>
           )}
+
+      <h5>Your Booking Status:</h5>
+      {bookingIds.map((bookingId) => (
+        <p key={bookingId}>{bookingId}</p>
+      ))}
 
       <ErrorModal
         errorMessage={errorMessage}

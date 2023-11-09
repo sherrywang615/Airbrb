@@ -46,6 +46,8 @@ function Home (props) {
     });
   }, []);
 
+  console.log(localStorage.getItem('publishedListingIds'));
+
   return (
     <>
       <h2>All Listings</h2>
