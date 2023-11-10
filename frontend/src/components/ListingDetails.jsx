@@ -24,7 +24,7 @@ function ListingDetails (props) {
     // );
     // setBookingIds(savedBookingIds);
     const savedBookingIds = JSON.parse(
-      localStorage.getItem(`bookingIds/${props.token}`)
+      localStorage.getItem(`bookingIds/${props.email}`)
     );
     getAllBookings().then((bookings) => {
       if (savedBookingIds) {
@@ -80,9 +80,8 @@ function ListingDetails (props) {
       setListing(listing);
     });
     const savedBookingIds = JSON.parse(
-      localStorage.getItem(`bookingIds/${props.token}`)
+      localStorage.getItem(`bookingIds/${props.email}`)
     );
-    // setBookingIds(savedBookingIds);
 
     getAllBookings().then((bookings) => {
       if (savedBookingIds) {
@@ -95,8 +94,8 @@ function ListingDetails (props) {
   }, [id]);
 
   console.log(bookings);
-  console.log(localStorage.getItem(`bookingIds/${props.token}`));
-
+  console.log(props.email);
+  console.log(localStorage.getItem(`bookingIds/${props.email}`));
   return (
     <>
       {listing
@@ -139,6 +138,7 @@ function ListingDetails (props) {
             handleBookingClose={handleBookingClose}
             listingId={id}
             price={listing.price}
+            email={props.email}
           />
         </>
           )

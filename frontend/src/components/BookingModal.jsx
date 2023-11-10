@@ -47,7 +47,7 @@ function BookingModal (props) {
       console.log('Booking confirmed');
       setBookingConfirmation(true);
       const savedBookingIds = JSON.parse(
-        localStorage.getItem(`bookingIds/${props.token}`)
+        localStorage.getItem(`bookingIds/${props.email}`)
       );
       let updatedBookingIds = '';
       if (savedBookingIds) {
@@ -57,14 +57,12 @@ function BookingModal (props) {
       }
       // setBookingIds(updatedBookingIds);
       localStorage.setItem(
-        `bookingIds/${props.token}`,
+        `bookingIds/${props.email}`,
         JSON.stringify(updatedBookingIds)
       );
       return data.bookingId;
     }
   };
-
-  console.log(JSON.parse(localStorage.getItem(`bookingIds/${props.token}`)));
 
   return (
     <>

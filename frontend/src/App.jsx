@@ -12,11 +12,16 @@ import BookingRequests from './components/BookingRequests';
 
 function App () {
   const [token, setToken] = React.useState('');
+  const [email, setEmail] = React.useState('');
 
   React.useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       setToken(token);
+    }
+    const email = localStorage.getItem('email');
+    if (email) {
+      setEmail(email);
     }
   }, []);
 
@@ -27,7 +32,7 @@ function App () {
         <Route path='/' element={<Home token={token}/>} />
         <Route
           path='/login'
-          element={<Login token={token} setToken={setToken} />}
+          element={<Login token={token} setToken={setToken} email={email} setEmail={setEmail}/>}
         />
         <Route
           path='/register'
@@ -41,7 +46,7 @@ function App () {
           path='/hosted-listings'
           element={<HostedListings token={token} />}
         />
-        <Route path="/listing/:id" element={<ListingDetails token={token}/>} />
+        <Route path="/listing/:id" element={<ListingDetails token={token} email={email}/>} />
         <Route path="/listing/:listingId/bookings" element={<BookingRequests token={token}/>} />
       </Routes>
     </BrowserRouter>

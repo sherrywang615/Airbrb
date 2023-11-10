@@ -31,7 +31,9 @@ function Login (props) {
         } else {
           if (data.token) {
             localStorage.setItem('token', data.token);
+            localStorage.setItem('email', email);
             props.setToken(data.token);
+            props.setEmail(email);
             navigate('/dashboard');
           }
         }

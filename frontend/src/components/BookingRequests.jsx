@@ -169,8 +169,6 @@ function BookingRequests (props) {
     return totalProfit;
   };
 
-  console.log(listing);
-
   return (
     <>
       <h2>Booking Requests & Listing History </h2>
