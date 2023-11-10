@@ -340,9 +340,17 @@ function CreateListingsModal (props) {
           getListing(listingId).then((publishedListing) => {
             const savedListings = JSON.parse(localStorage.getItem('listings'));
             const updatedListings = savedListings.map((listing) =>
-              listing.id === publishedListing.id ? publishedListing : listing
+              listing.id.toString() === listingId ? publishedListing : listing
             );
+            const filteredListings = updatedListings.filter((listing) => listing.published);
             localStorage.setItem('listings', JSON.stringify(updatedListings));
+            localStorage.setItem('publishedListingIds', filteredListings);
+            // const savedPublishedListings = JSON.parse(localStorage.getItem('publishedListings'));
+            // if (savedPublishedListings) {
+            //   localStorage.setItem('publishedListings', JSON.stringify([...savedPublishedListings, publishedListing]));
+            // } else {
+            //   localStorage.setItem('publishedListings', JSON.stringify([publishedListing]));
+            // }
             setListings(updatedListings);
           });
           setShowAvailability(false);

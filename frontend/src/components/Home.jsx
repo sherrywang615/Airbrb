@@ -32,19 +32,24 @@ function Home (props) {
   // Call getAllListings() when component mounts and sort the listings in alphabetical order
   React.useEffect(() => {
     getAllListings().then((listings) => {
-      const publishedListingIds = localStorage.getItem('publishedListingIds');
-      if (publishedListingIds) {
-        const publishedListingIdsArr = JSON.parse(publishedListingIds);
-        const filteredListings = listings.filter((listing) =>
-          publishedListingIdsArr.includes(listing.id.toString())
-        );
-        const sortedListings = filteredListings.sort((a, b) =>
-          a.title.localeCompare(b.title)
-        );
-        setListings(sortedListings);
-      }
+      // const publishedListingIds = localStorage.getItem('publishedListingIds');
+      // if (publishedListingIds) {
+      //   const publishedListingIdsArr = JSON.parse(publishedListingIds);
+      //   const filteredListings = listings.filter((listing) =>
+      //     publishedListingIdsArr.includes(listing.id.toString())
+      //   );
+      const filteredListings = JSON.parse(localStorage.getItem('listings')).filter((listing) => listing.published === true);
+      const sortedListings = filteredListings.sort((a, b) =>
+        a.title.localeCompare(b.title)
+      );
+      setListings(sortedListings);
     });
   }, []);
+
+  // localStorage.removeItem('publishedListingIds');
+  // console.log(JSON.parse(localStorage.getItem('publishedListings')));
+  console.log(JSON.parse(localStorage.getItem('listings')).filter((listing) => listing.published === true));
+  console.log(listings);
 
   return (
     <>

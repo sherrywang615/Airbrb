@@ -3,6 +3,7 @@ import ErrorModal from './ErrorModal';
 import { useParams } from 'react-router-dom';
 import BookingModal from './BookingModal';
 import Button from 'react-bootstrap/Button';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 // Listing details component
 function ListingDetails (props) {
@@ -10,17 +11,29 @@ function ListingDetails (props) {
   const [listing, setListing] = React.useState(null);
   const [errorMessage, setErrorMessage] = React.useState('');
   const [errorShow, setErrorShow] = React.useState(false);
-  const [bookingIds, setBookingIds] = React.useState([]);
+  // const [bookingIds, setBookingIds] = React.useState([]);
+  const [bookings, setBookings] = React.useState([]);
   const handleErrorShow = () => setErrorShow(true);
   const handleErrorClose = () => setErrorShow(false);
   const [bookingShow, setBookingShow] = React.useState(false);
   const handleBookingShow = () => setBookingShow(true);
   const handleBookingClose = () => {
     setBookingShow(false);
+    // const savedBookingIds = JSON.parse(
+    //   localStorage.getItem(`bookingIds/${props.token}`)
+    // );
+    // setBookingIds(savedBookingIds);
     const savedBookingIds = JSON.parse(
       localStorage.getItem(`bookingIds/${props.token}`)
     );
-    setBookingIds(savedBookingIds);
+    getAllBookings().then((bookings) => {
+      if (savedBookingIds) {
+        const filteredBookings = bookings.filter((booking) =>
+          savedBookingIds.includes(booking.id.toString())
+        );
+        setBookings(filteredBookings);
+      }
+    });
   };
 
   // Call the api to get a listing
@@ -42,6 +55,25 @@ function ListingDetails (props) {
     }
   };
 
+  // call the api to get all bookings
+  const getAllBookings = async () => {
+    const res = await fetch('http://localhost:5005/bookings', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${props.token}`,
+      },
+    });
+    const data = await res.json();
+    if (data.error) {
+      console.log(data.error);
+      setErrorMessage(data.error);
+      handleErrorShow();
+    } else {
+      return data.bookings;
+    }
+  };
+
   // Call getListing() and set listing when component mounts
   React.useEffect(() => {
     getListing(id).then((listing) => {
@@ -50,8 +82,20 @@ function ListingDetails (props) {
     const savedBookingIds = JSON.parse(
       localStorage.getItem(`bookingIds/${props.token}`)
     );
-    setBookingIds(savedBookingIds);
+    // setBookingIds(savedBookingIds);
+
+    getAllBookings().then((bookings) => {
+      if (savedBookingIds) {
+        const filteredBookings = bookings.filter((booking) =>
+          savedBookingIds.includes(booking.id.toString())
+        );
+        setBookings(filteredBookings);
+      }
+    });
   }, [id]);
+
+  console.log(bookings);
+  console.log(localStorage.getItem(`bookingIds/${props.token}`));
 
   return (
     <>
@@ -103,9 +147,34 @@ function ListingDetails (props) {
           )}
 
       <h5>Your Booking Status:</h5>
-      {bookingIds.map((bookingId) => (
-        <p key={bookingId}>{bookingId}</p>
-      ))}
+      <ListGroup as='ol' numbered className='w-50'>
+        {bookings.map((booking) => (
+          <ListGroup.Item
+            as='li'
+            className='d-flex justify-content-between align-items-start'
+            key={booking.id}>
+            <div className='ms-2 me-auto'>
+              <div>
+                Booking Id: {booking.id}
+                </div>
+                {new Date(booking.dateRange.start).toLocaleDateString()} -{' '}
+              {new Date(booking.dateRange.end).toLocaleDateString()}, ${booking.totalPrice} AUD total
+            </div>
+            <span
+              className={`badge ${
+                booking.status === 'pending'
+                  ? 'bg-warning'
+                  : booking.status === 'declined'
+                  ? 'bg-danger'
+                  : booking.status === 'accepted'
+                  ? 'bg-success'
+                  : 'bg-primary'
+              } rounded-pill`}>
+              {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+            </span>
+          </ListGroup.Item>
+        ))}
+      </ListGroup>
 
       <ErrorModal
         errorMessage={errorMessage}
