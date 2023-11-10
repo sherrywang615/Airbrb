@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import BookingModal from './BookingModal';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Review from './Review';
 
 // Listing details component
 function ListingDetails (props) {
@@ -11,18 +12,16 @@ function ListingDetails (props) {
   const [listing, setListing] = React.useState(null);
   const [errorMessage, setErrorMessage] = React.useState('');
   const [errorShow, setErrorShow] = React.useState(false);
-  // const [bookingIds, setBookingIds] = React.useState([]);
   const [bookings, setBookings] = React.useState([]);
+  const [reviewShow, setReviewShow] = React.useState(false);
   const handleErrorShow = () => setErrorShow(true);
   const handleErrorClose = () => setErrorShow(false);
   const [bookingShow, setBookingShow] = React.useState(false);
   const handleBookingShow = () => setBookingShow(true);
+  const handleReviewClose = () => setReviewShow(false);
+  const handleReviewShow = () => setReviewShow(true);
   const handleBookingClose = () => {
     setBookingShow(false);
-    // const savedBookingIds = JSON.parse(
-    //   localStorage.getItem(`bookingIds/${props.token}`)
-    // );
-    // setBookingIds(savedBookingIds);
     const savedBookingIds = JSON.parse(
       localStorage.getItem(`bookingIds/${props.email}`)
     );
@@ -93,9 +92,6 @@ function ListingDetails (props) {
     });
   }, [id]);
 
-  console.log(bookings);
-  console.log(props.email);
-  console.log(localStorage.getItem(`bookingIds/${props.email}`));
   return (
     <>
       {listing
@@ -154,11 +150,10 @@ function ListingDetails (props) {
             className='d-flex justify-content-between align-items-start'
             key={booking.id}>
             <div className='ms-2 me-auto'>
-              <div>
-                Booking Id: {booking.id}
-                </div>
-                {new Date(booking.dateRange.start).toLocaleDateString()} -{' '}
-              {new Date(booking.dateRange.end).toLocaleDateString()}, ${booking.totalPrice} AUD total
+              <div>Booking Id: {booking.id}</div>
+              {new Date(booking.dateRange.start).toLocaleDateString()} -{' '}
+              {new Date(booking.dateRange.end).toLocaleDateString()}, $
+              {booking.totalPrice} AUD total
             </div>
             <span
               className={`badge ${
@@ -175,6 +170,21 @@ function ListingDetails (props) {
           </ListGroup.Item>
         ))}
       </ListGroup>
+
+      {bookings.some((booking) => booking.status === 'accepted') && (
+        <>
+          <Button variant='info' onClick={handleReviewShow}>
+            Leave a review
+          </Button>
+          <Review
+            show={reviewShow}
+            token={props.token}
+            handleClose={handleReviewClose}
+            bookingId={bookings.find(booking => booking.status === 'accepted').id}
+            listingId={id}
+          />
+        </>
+      )}
 
       <ErrorModal
         errorMessage={errorMessage}

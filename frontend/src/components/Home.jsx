@@ -48,8 +48,6 @@ function Home (props) {
 
   // localStorage.removeItem('publishedListingIds');
   // console.log(JSON.parse(localStorage.getItem('publishedListings')));
-  console.log(JSON.parse(localStorage.getItem('listings')).filter((listing) => listing.published === true));
-  console.log(listings);
 
   return (
     <>
