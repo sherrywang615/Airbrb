@@ -17,17 +17,22 @@ function AvailabilityModal (props) {
       </Modal.Header>
       <Modal.Body>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker
-          label="Start Date"
-          value={props.startDate}
-          onChange={(newValue) => props.setStartDate(newValue)}
-        />
-        <DatePicker
-          label="End Date"
-          value={props.endDate}
-          onChange={(newValue) => props.setEndDate(newValue)}
-        />
+        {props.dateRanges.map((range, index) => (
+          <div key={index}>
+            <DatePicker
+              label={`Start Date ${index + 1}`}
+              value={range.start}
+              onChange={(newValue) => props.handleDateChange(index, 'start', newValue)}
+            />
+            <DatePicker
+              label={`End Date ${index + 1}`}
+              value={range.end}
+              onChange={(newValue) => props.handleDateChange(index, 'end', newValue)}
+            />
+          </div>
+        ))}
         </LocalizationProvider>
+        <Button variant='primary' onClick={props.addDateRange}>Add another date range</Button>
       </Modal.Body>
       <Modal.Footer>
         <Button variant='secondary' onClick={props.handleClose}>

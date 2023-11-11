@@ -67,8 +67,17 @@ function CreateListingsModal (props) {
   const [availability, setAvailability] = React.useState([]);
   const [publishListingId, setPublishListingId] = React.useState('');
   const [publishedListingIds, setPublishedListingIds] = React.useState([]);
-  const [startDate, setStartDate] = React.useState(null);
-  const [endDate, setEndDate] = React.useState(null);
+  // const [startDate, setStartDate] = React.useState(null);
+  // const [endDate, setEndDate] = React.useState(null);
+  const [dateRanges, setDateRanges] = React.useState([{ start: null, end: null }]);
+  const addDateRange = () => {
+    setDateRanges([...dateRanges, { start: null, end: null }]);
+  };
+  const handleDateChange = (index, startOrEnd, newValue) => {
+    const newDateRanges = [...dateRanges];
+    newDateRanges[index][startOrEnd] = newValue;
+    setDateRanges(newDateRanges);
+  };
 
   // Modal handlers
   const handleClose = () => setShow(false);
@@ -335,6 +344,11 @@ function CreateListingsModal (props) {
 
   // Call the api to publish a listing
   const handleAvailabilitySubmit = (listingId) => {
+    const convertedDateRanges = dateRanges.map(range => ({
+      start: new Date(range.start).toLocaleDateString(),
+      end: new Date(range.end).toLocaleDateString(),
+    }));
+
     fetch(`http://localhost:5005/listings/publish/${listingId}`, {
       method: 'PUT',
       headers: {
@@ -342,7 +356,7 @@ function CreateListingsModal (props) {
         Authorization: `Bearer ${props.token}`,
       },
       body: JSON.stringify({
-        availability: [{ start: new Date(startDate).toLocaleDateString(), end: new Date(endDate).toLocaleDateString() }],
+        availability: convertedDateRanges,
       }),
     })
       .then((res) => res.json())
@@ -573,10 +587,10 @@ function CreateListingsModal (props) {
         availability={availability}
         setAvailability={setAvailability}
         handleAvailabilitySubmit={() => handleAvailabilitySubmit(publishListingId)}
-        startDate={startDate}
-        setStartDate={setStartDate}
-        endDate={endDate}
-        setEndDate={setEndDate}
+        dateRanges={dateRanges}
+        setDateRanges={setDateRanges}
+        addDateRange={addDateRange}
+        handleDateChange={handleDateChange}
       />
 
       {listings.map((listing) => {
