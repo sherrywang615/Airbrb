@@ -67,6 +67,8 @@ function CreateListingsModal (props) {
   const [availability, setAvailability] = React.useState([]);
   const [publishListingId, setPublishListingId] = React.useState('');
   const [publishedListingIds, setPublishedListingIds] = React.useState([]);
+  const [startDate, setStartDate] = React.useState(null);
+  const [endDate, setEndDate] = React.useState(null);
 
   // Modal handlers
   const handleClose = () => setShow(false);
@@ -340,7 +342,7 @@ function CreateListingsModal (props) {
         Authorization: `Bearer ${props.token}`,
       },
       body: JSON.stringify({
-        availability: [],
+        availability: [{ start: new Date(startDate).toLocaleDateString(), end: new Date(endDate).toLocaleDateString() }],
       }),
     })
       .then((res) => res.json())
@@ -357,7 +359,6 @@ function CreateListingsModal (props) {
             const updatedListings = savedListings.map((listing) =>
               listing.id.toString() === listingId ? publishedListing : listing
             );
-            // const filteredListings = updatedListings.filter((listing) => listing.published);
             localStorage.setItem(`listings/${email}`, JSON.stringify(updatedListings));
             const savedPublishedListingIds = JSON.parse(localStorage.getItem('publishedListingIds')) || [];
             localStorage.setItem('publishedListingIds', JSON.stringify([...savedPublishedListingIds, listingId]));
@@ -572,6 +573,10 @@ function CreateListingsModal (props) {
         availability={availability}
         setAvailability={setAvailability}
         handleAvailabilitySubmit={() => handleAvailabilitySubmit(publishListingId)}
+        startDate={startDate}
+        setStartDate={setStartDate}
+        endDate={endDate}
+        setEndDate={setEndDate}
       />
 
       {listings.map((listing) => {

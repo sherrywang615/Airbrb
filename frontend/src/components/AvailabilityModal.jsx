@@ -2,9 +2,10 @@ import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
+// Modal for selecting availability when publish a listing
 function AvailabilityModal (props) {
   return (
     <Modal
@@ -16,10 +17,16 @@ function AvailabilityModal (props) {
       </Modal.Header>
       <Modal.Body>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DateRangeCalendar
-            value={props.availability}
-            onChange={(newValue) => props.setAvailability(newValue)}
-          />
+        <DatePicker
+          label="Start Date"
+          value={props.startDate}
+          onChange={(newValue) => props.setStartDate(newValue)}
+        />
+        <DatePicker
+          label="End Date"
+          value={props.endDate}
+          onChange={(newValue) => props.setEndDate(newValue)}
+        />
         </LocalizationProvider>
       </Modal.Body>
       <Modal.Footer>
