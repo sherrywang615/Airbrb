@@ -11,9 +11,27 @@ function Review (props) {
   const [comments, setComments] = React.useState('');
   const [errorMessage, setErrorMessage] = React.useState('');
   const [errorShow, setErrorShow] = React.useState(false);
-  //   const [reviewSubmitted, setReviewSubmitted] = React.useState(false);
   const handleErrorShow = () => setErrorShow(true);
   const handleErrorClose = () => setErrorShow(false);
+
+  // Call the api to get a listing
+  const getListing = async (listingId) => {
+    const res = await fetch(`http://localhost:5005/listings/${listingId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await res.json();
+    if (data.error) {
+      console.log(data.error);
+      setErrorMessage(data.error);
+      handleErrorShow();
+    } else {
+      data.listing.id = listingId;
+      return data.listing;
+    }
+  };
 
   // Call the api to post a new review for a listing
   const handleSubmit = async () => {
@@ -42,14 +60,14 @@ function Review (props) {
       console.log('Review submitted');
       props.setReviewSubmittedShow(true);
       props.handleClose();
-      // const review = { rating, comments };
-    //   const savedListings = JSON.parse(localStorage.getItem('listings'));
-    //   const updatedListings = savedListings.map((listing) =>
-    //     listing.id === props.listingId ? listing.reviews.push(review) : listing
-    //   );
-    //   localStorage.setItem('listings', JSON.stringify(updatedListings));
+      getListing(props.listingId).then((reviewedListing) => {
+        const savedListings = JSON.parse(localStorage.getItem(`listings/${reviewedListing.owner}`));
+        const updatedListings = savedListings.map((listing) =>
+          listing.id === reviewedListing.id ? reviewedListing : listing
+        );
+        localStorage.setItem(`listings/${reviewedListing.owner}`, JSON.stringify(updatedListings));
+      });
     }
-    // }
   };
 
   return (

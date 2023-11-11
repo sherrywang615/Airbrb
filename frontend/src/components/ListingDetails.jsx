@@ -191,6 +191,7 @@ function ListingDetails (props) {
           <Review
             show={reviewShow}
             token={props.token}
+            email={props.email}
             handleClose={handleReviewClose}
             bookingId={
               bookings.find((booking) => booking.status === 'accepted').id
