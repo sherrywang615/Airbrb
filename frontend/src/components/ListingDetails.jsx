@@ -5,6 +5,7 @@ import BookingModal from './BookingModal';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Review from './Review';
+import Rating from '@mui/material/Rating';
 
 // Listing details component
 function ListingDetails (props) {
@@ -14,6 +15,7 @@ function ListingDetails (props) {
   const [errorShow, setErrorShow] = React.useState(false);
   const [bookings, setBookings] = React.useState([]);
   const [reviewShow, setReviewShow] = React.useState(false);
+  const [reviewSubmittedShow, setReviewSubmittedShow] = React.useState(false);
   const handleErrorShow = () => setErrorShow(true);
   const handleErrorClose = () => setErrorShow(false);
   const [bookingShow, setBookingShow] = React.useState(false);
@@ -27,12 +29,15 @@ function ListingDetails (props) {
     );
     getAllBookings().then((bookings) => {
       if (savedBookingIds) {
-        const filteredBookings = bookings.filter((booking) =>
-          savedBookingIds.includes(booking.id.toString())
-        );
+        const filteredBookings = bookings
+          .filter((booking) => booking.listingId.toString() === id)
+          .filter((booking) => savedBookingIds.includes(booking.id.toString()));
         setBookings(filteredBookings);
       }
     });
+  };
+  const handleReviewSubmittedClose = () => {
+    setReviewSubmittedShow(false);
   };
 
   // Call the api to get a listing
@@ -73,7 +78,7 @@ function ListingDetails (props) {
     }
   };
 
-  // Call getListing() and set listing when component mounts
+  // Call getListing() and set listing when id or reviewSubmittedShow changes
   React.useEffect(() => {
     getListing(id).then((listing) => {
       setListing(listing);
@@ -84,13 +89,13 @@ function ListingDetails (props) {
 
     getAllBookings().then((bookings) => {
       if (savedBookingIds) {
-        const filteredBookings = bookings.filter((booking) =>
-          savedBookingIds.includes(booking.id.toString())
-        );
+        const filteredBookings = bookings
+          .filter((booking) => booking.listingId.toString() === id)
+          .filter((booking) => savedBookingIds.includes(booking.id.toString()));
         setBookings(filteredBookings);
       }
     });
-  }, [id]);
+  }, [id, reviewSubmittedShow]);
 
   return (
     <>
@@ -112,17 +117,24 @@ function ListingDetails (props) {
             {listing.metadata.bathrooms > 1 ? 'baths' : 'bath'}
           </p>
           <p>Amenities: {listing.metadata.amenities}</p>
-          <h5>⭐️</h5>
           <h5>Reviews:</h5>
-          {listing && listing.reviews && listing.reviews.length > 0
-            ? (
-                listing.reviews.map((review) => (
-              <p key={review.id}>{review.content}</p>
-                ))
-              )
-            : (
-            <p>No reviews</p>
-              )}
+          <ListGroup className='w-50'>
+            {listing && listing.reviews && listing.reviews.length > 0
+              ? (
+                  listing.reviews.map((review, index) => (
+                <>
+                  <ListGroup.Item key={index}>
+                    <Rating name='read-only' value={review.rating} readOnly />{' '}
+                    {review.rating} <br />
+                    {review.comments}
+                  </ListGroup.Item>
+                </>
+                  ))
+                )
+              : (
+              <p>No reviews</p>
+                )}
+          </ListGroup>
           {props.token !== null && (
             <Button variant='primary' onClick={handleBookingShow}>
               Make a booking
@@ -180,8 +192,13 @@ function ListingDetails (props) {
             show={reviewShow}
             token={props.token}
             handleClose={handleReviewClose}
-            bookingId={bookings.find(booking => booking.status === 'accepted').id}
+            bookingId={
+              bookings.find((booking) => booking.status === 'accepted').id
+            }
             listingId={id}
+            reviewSubmittedShow={reviewSubmittedShow}
+            handleReviewSubmittedClose={handleReviewSubmittedClose}
+            setReviewSubmittedShow={setReviewSubmittedShow}
           />
         </>
       )}

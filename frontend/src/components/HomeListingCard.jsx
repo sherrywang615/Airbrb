@@ -13,7 +13,7 @@ function HomeListingCard (props) {
             {props.street}{' '},{props.city}{' '}, {props.state},{' '}
             {props.postcode}, {props.country}
             <br />${props.price} /night <br />
-            {props.reviews.length} reviews <br />
+            {props.reviews.length} {props.reviews.length > 1 ? 'reviews' : 'review'} <br />
           </Card.Text>
         </Card.Body>
       </Card>

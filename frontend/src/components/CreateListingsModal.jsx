@@ -31,6 +31,7 @@ function CreateListingsModal (props) {
   const [country, setCountry] = React.useState('');
   const address = { street, city, state, postcode, country };
   const token = props.token;
+  const email = props.email;
   const [errorMessage, setErrorMessage] = React.useState('');
   const [errorShow, setErrorShow] = React.useState(false);
   const [showEdit, setShowEdit] = React.useState(false);
@@ -96,12 +97,14 @@ function CreateListingsModal (props) {
           console.log('unpublished');
           setPublishedListingIds(publishedListingIds.filter((id) => id !== listingId));
           getListing(listingId).then((unpublishedListing) => {
-            const savedListings = JSON.parse(localStorage.getItem('listings'));
+            const savedListings = JSON.parse(localStorage.getItem(`listings/${email}`));
             const updatedListings = savedListings.map((listing) =>
               listing.id === unpublishedListing.id ? unpublishedListing : listing
             );
-            localStorage.setItem('listings', JSON.stringify(updatedListings));
+            localStorage.setItem(`listings/${email}`, JSON.stringify(updatedListings));
             setListings(updatedListings);
+            const savedPublishedListingIds = JSON.parse(localStorage.getItem('publishedListingIds'));
+            localStorage.setItem('publishedListingIds', JSON.stringify(savedPublishedListingIds.filter((id) => id !== listingId.toString())));
           });
         }
       });
@@ -173,6 +176,9 @@ function CreateListingsModal (props) {
             handleErrorShow();
           } else {
             setListingIds([...new Set([...listingIds, data.listingId])]);
+            // const savedListingIdsString = localStorage.getItem(`listingIds/${props.email}`);
+            // const savedListingIds = savedListingIdsString ? JSON.parse(savedListingIdsString) : [];
+            // localStorage.setItem(`listingIds/${props.email}`, JSON.stringify([...savedListingIds, data.listingId]));
             handleClose();
           }
         });
@@ -219,13 +225,13 @@ function CreateListingsModal (props) {
           setListingIds((listingIds) =>
             listingIds.filter((id) => id !== listingId)
           );
-          const savedListings = localStorage.getItem('listings');
+          const savedListings = localStorage.getItem(`listings/${email}`);
           if (savedListings) {
             const listingsArray = JSON.parse(savedListings);
             const filteredListings = listingsArray.filter(
               (listing) => listing.id !== listingId
             );
-            localStorage.setItem('listings', JSON.stringify(filteredListings));
+            localStorage.setItem(`listings/${email}`, JSON.stringify(filteredListings));
             setListings(filteredListings);
           }
         }
@@ -257,11 +263,11 @@ function CreateListingsModal (props) {
         } else {
           console.log('edited');
           getListing(listingId).then((editedListing) => {
-            const savedListings = JSON.parse(localStorage.getItem('listings'));
+            const savedListings = JSON.parse(localStorage.getItem(`listings/${email}`));
             const updatedListings = savedListings.map((listing) =>
               listing.id === editedListing.id ? editedListing : listing
             );
-            localStorage.setItem('listings', JSON.stringify(updatedListings));
+            localStorage.setItem(`listings/${email}`, JSON.stringify(updatedListings));
             setListings(updatedListings);
           });
           setShowEdit(false);
@@ -279,12 +285,23 @@ function CreateListingsModal (props) {
 
   // update the listings when the component mounts
   React.useEffect(() => {
-    // localStorage.removeItem('listings');
-    const savedListings = localStorage.getItem('listings');
+    // localStorage.removeItem(`listings/${email}`);
+    const savedListings = localStorage.getItem(`listings/${email}`);
     if (savedListings && !listings.includes(JSON.parse(savedListings))) {
       setListings([...listings, ...JSON.parse(savedListings)]);
     }
-  }, []);
+    // const savedListingIds = localStorage.getItem(`listingIds/${props.email}`);
+    // console.log(savedListingIds);
+    // if (savedListingIds) {
+    //   const savedListingIdsArr = JSON.parse(savedListingIds);
+    //   Promise.all(savedListingIdsArr.map(listingId => getListing(listingId)))
+    //     .then(fetchedListings => {
+    //       setListings(fetchedListings);
+    //     });
+    // }
+  }, [props.email]);
+
+  // console.log(localStorage.getItem(`listings/${email}`));
 
   // update the listings
   const updateListings = (newListings) => {
@@ -294,7 +311,7 @@ function CreateListingsModal (props) {
       });
       setListings([...listings, ...filteredListings]);
       localStorage.setItem(
-        'listings',
+        `listings/${email}`,
         JSON.stringify([...listings, ...filteredListings])
       );
     }
@@ -338,19 +355,14 @@ function CreateListingsModal (props) {
           console.log('published');
           setPublishedListingIds([...publishedListingIds, listingId]);
           getListing(listingId).then((publishedListing) => {
-            const savedListings = JSON.parse(localStorage.getItem('listings'));
+            const savedListings = JSON.parse(localStorage.getItem(`listings/${email}`));
             const updatedListings = savedListings.map((listing) =>
               listing.id.toString() === listingId ? publishedListing : listing
             );
-            const filteredListings = updatedListings.filter((listing) => listing.published);
-            localStorage.setItem('listings', JSON.stringify(updatedListings));
-            localStorage.setItem('publishedListingIds', filteredListings);
-            // const savedPublishedListings = JSON.parse(localStorage.getItem('publishedListings'));
-            // if (savedPublishedListings) {
-            //   localStorage.setItem('publishedListings', JSON.stringify([...savedPublishedListings, publishedListing]));
-            // } else {
-            //   localStorage.setItem('publishedListings', JSON.stringify([publishedListing]));
-            // }
+            // const filteredListings = updatedListings.filter((listing) => listing.published);
+            localStorage.setItem(`listings/${email}`, JSON.stringify(updatedListings));
+            const savedPublishedListingIds = JSON.parse(localStorage.getItem('publishedListingIds')) || [];
+            localStorage.setItem('publishedListingIds', JSON.stringify([...savedPublishedListingIds, listingId]));
             setListings(updatedListings);
           });
           setShowAvailability(false);
@@ -359,9 +371,9 @@ function CreateListingsModal (props) {
   };
 
   // Update localStorage when publishedListingIds changes
-  React.useEffect(() => {
-    localStorage.setItem('publishedListingIds', JSON.stringify(publishedListingIds));
-  }, [publishedListingIds]);
+  // React.useEffect(() => {
+  //   localStorage.setItem('publishedListingIds', JSON.stringify(publishedListingIds));
+  // }, [publishedListingIds]);
 
   return (
     <>

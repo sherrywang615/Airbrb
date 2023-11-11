@@ -44,7 +44,7 @@ function App () {
         />
         <Route
           path='/hosted-listings'
-          element={<HostedListings token={token} />}
+          element={<HostedListings token={token} email={email}/>}
         />
         <Route path="/listing/:id" element={<ListingDetails token={token} email={email}/>} />
         <Route path="/listing/:listingId/bookings" element={<BookingRequests token={token}/>} />

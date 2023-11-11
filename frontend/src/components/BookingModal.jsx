@@ -47,14 +47,9 @@ function BookingModal (props) {
       console.log('Booking confirmed');
       setBookingConfirmation(true);
       const savedBookingIds = JSON.parse(
-        localStorage.getItem(`bookingIds/${props.email}`)
+        localStorage.getItem(`bookingIds/${props.email}`) || []
       );
-      let updatedBookingIds = '';
-      if (savedBookingIds) {
-        updatedBookingIds = [...savedBookingIds, data.bookingId];
-      } else {
-        updatedBookingIds = [data.bookingId];
-      }
+      const updatedBookingIds = [...savedBookingIds, data.bookingId];
       // setBookingIds(updatedBookingIds);
       localStorage.setItem(
         `bookingIds/${props.email}`,

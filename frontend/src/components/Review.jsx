@@ -11,7 +11,7 @@ function Review (props) {
   const [comments, setComments] = React.useState('');
   const [errorMessage, setErrorMessage] = React.useState('');
   const [errorShow, setErrorShow] = React.useState(false);
-  const [reviewSubmitted, setReviewSubmitted] = React.useState(false);
+  //   const [reviewSubmitted, setReviewSubmitted] = React.useState(false);
   const handleErrorShow = () => setErrorShow(true);
   const handleErrorClose = () => setErrorShow(false);
 
@@ -40,9 +40,16 @@ function Review (props) {
       handleErrorShow();
     } else {
       console.log('Review submitted');
-      setReviewSubmitted(true);
+      props.setReviewSubmittedShow(true);
       props.handleClose();
+      // const review = { rating, comments };
+    //   const savedListings = JSON.parse(localStorage.getItem('listings'));
+    //   const updatedListings = savedListings.map((listing) =>
+    //     listing.id === props.listingId ? listing.reviews.push(review) : listing
+    //   );
+    //   localStorage.setItem('listings', JSON.stringify(updatedListings));
     }
+    // }
   };
 
   return (
@@ -86,16 +93,20 @@ function Review (props) {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={reviewSubmitted}>
+      <Modal show={props.reviewSubmittedShow}>
         <Modal.Header closeButton>
           <Modal.Title>Review submitted!</Modal.Title>
         </Modal.Header>
         <Modal.Footer>
-          <Button variant='secondary' onClick={() => { setReviewSubmitted(false) }}>
+          <Button
+            variant='secondary'
+            onClick={() => {
+              props.handleReviewSubmittedClose();
+            }}>
             Close
           </Button>
         </Modal.Footer>
-        </Modal>
+      </Modal>
 
       <ErrorModal
         errorMessage={errorMessage}
