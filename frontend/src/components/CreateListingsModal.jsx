@@ -301,8 +301,6 @@ function CreateListingsModal (props) {
     // }
   }, [props.email]);
 
-  console.log(localStorage.getItem(`listings/${email}`));
-
   // update the listings
   const updateListings = (newListings) => {
     if (newListings.length > 0) {

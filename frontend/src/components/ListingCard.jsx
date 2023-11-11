@@ -4,14 +4,14 @@ import Button from 'react-bootstrap/Button';
 import Rating from '@mui/material/Rating';
 import { Link } from 'react-router-dom';
 
+// Listing card on the hosted listings page
 function ListingCard (props) {
-  // const rating = props.reviews.reduce((acc, review) => {
-  //   return acc + review.rating;
-  // }
-  // , 0);
-
-  // const avgRating = rating / props.reviews.length;
-  const avgRating = 2.3;
+  // Calculate the average rating for a listing
+  const rating = props.reviews.reduce((acc, review) => {
+    return acc + review.rating;
+  }
+  , 0);
+  const avgRating = rating / props.reviews.length;
 
   return (
     <Card style={{ width: '18rem' }}>
