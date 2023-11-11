@@ -4,7 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './components/login';
 import Register from './components/Register';
 import Home from './components/Home';
-import Dashboard from './components/Dashboard';
 import NavBar from './components/NavBar';
 import HostedListings from './components/HostedListings';
 import ListingDetails from './components/ListingDetails';
@@ -36,11 +35,7 @@ function App () {
         />
         <Route
           path='/register'
-          element={<Register token={token} setToken={setToken} />}
-        />
-        <Route
-          path='/dashboard'
-          element={<Dashboard token={token} setToken={setToken} />}
+          element={<Register token={token} setToken={setToken} email={email} setEmail={setEmail}/>}
         />
         <Route
           path='/hosted-listings'

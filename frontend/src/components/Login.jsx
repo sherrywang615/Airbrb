@@ -34,7 +34,7 @@ function Login (props) {
             localStorage.setItem('email', email);
             props.setToken(data.token);
             props.setEmail(email);
-            navigate('/dashboard');
+            navigate('/hosted-listings');
           }
         }
       });

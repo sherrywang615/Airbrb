@@ -37,8 +37,10 @@ function Register (props) {
           } else {
             if (data.token) {
               localStorage.setItem('token', data.token);
+              localStorage.setItem('email', email);
               props.setToken(data.token);
-              navigate('/dashboard');
+              props.setEmail(email);
+              navigate('/hosted-listings');
             }
           }
         });

@@ -5,6 +5,7 @@ import HomeListingCard from './HomeListingCard';
 // Home page component
 function Home (props) {
   const [listings, setListings] = React.useState([]);
+  // const [filteredResults, setFilteredResults] = React.useState([]);
   const [errorMessage, setErrorMessage] = React.useState('');
   const [errorShow, setErrorShow] = React.useState(false);
   const handleErrorShow = () => setErrorShow(true);
