@@ -40,7 +40,6 @@ function NaviationBar (props) {
                 ? (
                 <>
                   <Nav.Link href='/hosted-listings'>View Hosted Listings</Nav.Link>
-                  <Nav.Link>View All Listings</Nav.Link>
                   <Nav.Link onClick={logout}>Logout</Nav.Link>
                 </>
                   )

@@ -50,7 +50,6 @@ function BookingModal (props) {
         localStorage.getItem(`bookingIds/${props.email}`) || []
       );
       const updatedBookingIds = [...savedBookingIds, data.bookingId];
-      // setBookingIds(updatedBookingIds);
       localStorage.setItem(
         `bookingIds/${props.email}`,
         JSON.stringify(updatedBookingIds)

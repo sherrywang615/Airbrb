@@ -67,8 +67,6 @@ function CreateListingsModal (props) {
   const [availability, setAvailability] = React.useState([]);
   const [publishListingId, setPublishListingId] = React.useState('');
   const [publishedListingIds, setPublishedListingIds] = React.useState([]);
-  // const [startDate, setStartDate] = React.useState(null);
-  // const [endDate, setEndDate] = React.useState(null);
   const [dateRanges, setDateRanges] = React.useState([{ start: null, end: null }]);
   const addDateRange = () => {
     setDateRanges([...dateRanges, { start: null, end: null }]);
@@ -187,9 +185,6 @@ function CreateListingsModal (props) {
             handleErrorShow();
           } else {
             setListingIds([...new Set([...listingIds, data.listingId])]);
-            // const savedListingIdsString = localStorage.getItem(`listingIds/${props.email}`);
-            // const savedListingIds = savedListingIdsString ? JSON.parse(savedListingIdsString) : [];
-            // localStorage.setItem(`listingIds/${props.email}`, JSON.stringify([...savedListingIds, data.listingId]));
             handleClose();
           }
         });
@@ -301,15 +296,6 @@ function CreateListingsModal (props) {
     if (savedListings && !listings.includes(JSON.parse(savedListings))) {
       setListings([...listings, ...JSON.parse(savedListings)]);
     }
-    // const savedListingIds = localStorage.getItem(`listingIds/${props.email}`);
-    // console.log(savedListingIds);
-    // if (savedListingIds) {
-    //   const savedListingIdsArr = JSON.parse(savedListingIds);
-    //   Promise.all(savedListingIdsArr.map(listingId => getListing(listingId)))
-    //     .then(fetchedListings => {
-    //       setListings(fetchedListings);
-    //     });
-    // }
   }, [props.email]);
 
   // update the listings
@@ -344,10 +330,10 @@ function CreateListingsModal (props) {
 
   // Call the api to publish a listing
   const handleAvailabilitySubmit = (listingId) => {
-    const convertedDateRanges = dateRanges.map(range => ({
-      start: new Date(range.start).toLocaleDateString(),
-      end: new Date(range.end).toLocaleDateString(),
-    }));
+    // const convertedDateRanges = dateRanges.map(range => ({
+    //   start: new Date(range.start).toLocaleDateString(),
+    //   end: new Date(range.end).toLocaleDateString(),
+    // }));
 
     fetch(`http://localhost:5005/listings/publish/${listingId}`, {
       method: 'PUT',
@@ -356,7 +342,7 @@ function CreateListingsModal (props) {
         Authorization: `Bearer ${props.token}`,
       },
       body: JSON.stringify({
-        availability: convertedDateRanges,
+        availability: dateRanges,
       }),
     })
       .then((res) => res.json())

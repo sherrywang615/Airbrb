@@ -1,6 +1,5 @@
 import React from 'react';
 import CreateListingsModal from './CreateListingsModal';
-// import { Link } from 'react-router-dom';
 
 function HostedListings (props) {
   return (
