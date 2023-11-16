@@ -2,14 +2,8 @@ describe('UI testing', () => {
   it('Happy path of an admin', () => {
     //Registers successfully
     cy.visit('http://localhost:3000/register');
-    // cy.visit('http://localhost:3000/login');
-    // cy.get('#loginEmail').type('bob2@unsw.com');
-    // cy.get('#loginPassword').type('bob123');
-    // cy.get('button[name="login-button"]').click();
-
-    // cy.url().should('include', '/hosted-listing');
-    cy.get('#registerEmail').type('test18@unsw.com');
-    cy.get('#registerName').type('test18');
+    cy.get('#registerEmail').type('test20@unsw.com');
+    cy.get('#registerName').type('test20');
     cy.get('#registerPassword').type('test123');
     cy.get('#registerConfirmPassword').type('test123');
     cy.get('button[name="register"]').click();
@@ -17,7 +11,7 @@ describe('UI testing', () => {
 
     //creates a  new listing successfully
     cy.get('button[name="create-new-listing"]').click();
-    cy.get('#title').type('test18');
+    cy.get('#title').type('test20');
     cy.get('#formGridStreet').type('1 Test Street');
     cy.get('#formGridCity').type('Sydney');
     cy.get('#formGridState').type('NSW');
@@ -31,7 +25,7 @@ describe('UI testing', () => {
     cy.get('#amenities').type('pool, kitchen');
     cy.get('#formFile').attachFile('dog.jpeg'); 
     cy.get('.modal-footer').contains('Submit').click();
-    cy.get('.card').find('.card-title').should('contain', 'test18');
+    cy.get('.card').find('.card-title').should('contain', 'test20');
 
     //updates the thumbnail and title of the listing successfully
     cy.get('button[name="edit-listing"]').click();
@@ -60,13 +54,8 @@ describe('UI testing', () => {
 
     //register a new user successfully
     cy.get('a[name="register-nav"]').click();
-    // cy.visit('http://localhost:3000/login');
-    // cy.get('#loginEmail').type('alice@unsw.com');
-    // cy.get('#loginPassword').type('alice123');
-    // cy.get('button[name="login"]').click();
-    // cy.get('button[name="login-button"]').click();
-    cy.get('#registerEmail').type('test19@unsw.com');
-    cy.get('#registerName').type('test19');
+    cy.get('#registerEmail').type('test21@unsw.com');
+    cy.get('#registerName').type('test21');
     cy.get('#registerPassword').type('test123');
     cy.get('#registerConfirmPassword').type('test123');
     cy.get('button[name="register"]').click();
@@ -75,7 +64,7 @@ describe('UI testing', () => {
     //create a new listing successfully
     cy.visit('http://localhost:3000/hosted-listings');
     cy.get('button[name="create-new-listing"]').click();
-    cy.get('#title').type('test19');
+    cy.get('#title').type('test21');
     cy.get('#formGridStreet').type('2 Test Street');
     cy.get('#formGridCity').type('Melbourne');
     cy.get('#formGridState').type('VIC');
@@ -89,7 +78,7 @@ describe('UI testing', () => {
     cy.get('#amenities').type('pool, kitchen');
     cy.get('#formFile').attachFile('dog.jpeg'); 
     cy.get('.modal-footer').contains('Submit').click();
-    cy.get('.card').find('.card-title').should('contain', 'test19');
+    cy.get('.card').find('.card-title').should('contain', 'test21');
 
     //publish a listing successfully
     cy.get('button[name="publish"]').click();
@@ -103,7 +92,7 @@ describe('UI testing', () => {
 
     //logs in as user1 successfully
     cy.get('a[name="login-nav"]').click();
-    cy.get('#loginEmail').type('test18@unsw.com');
+    cy.get('#loginEmail').type('test20@unsw.com');
     cy.get('#loginPassword').type('test123');
     cy.get('button[name="login-button"]').click();
     cy.url().should('include', '/hosted-listing');
@@ -117,7 +106,6 @@ describe('UI testing', () => {
     cy.get('button[name="booking-submit"]').click();
     cy.contains('Booking Confirmed!').should('exist');
     cy.contains('Close').click();
-    cy.wait(1000);
 
     //logs out user1 successfully
     cy.get('a[name="logout"]').click();
@@ -125,7 +113,7 @@ describe('UI testing', () => {
 
     //logs back into the application successfully
     cy.get('a[name="login-nav"]').click();
-    cy.get('#loginEmail').type('test18@unsw.com');
+    cy.get('#loginEmail').type('test20@unsw.com');
     cy.get('#loginPassword').type('test123');
     cy.get('button[name="login-button"]').click();
     cy.url().should('include', '/hosted-listing');
