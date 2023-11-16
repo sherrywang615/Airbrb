@@ -4,6 +4,7 @@ import HomeListingCard from './HomeListingCard';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Button from 'react-bootstrap/Button';
+import Grid from '@mui/system/Unstable_Grid';
 
 // Home page component
 function Home (props) {
@@ -51,8 +52,8 @@ function Home (props) {
         );
       case 'dateRange':
         return setListings(
-          detailedListings.filter(listing => {
-            return listing.availability.some(range => {
+          detailedListings.filter((listing) => {
+            return listing.availability.some((range) => {
               const rangeStart = new Date(range.start);
               const rangeEnd = new Date(range.end);
               return new Date(start) >= rangeStart && new Date(end) <= rangeEnd;
@@ -67,13 +68,15 @@ function Home (props) {
         );
 
       case 'ratings':
-        return setListings(detailedListings.sort((a, b) => {
-          if (sortOrder === 'highestToLowest') {
-            return b.rating - a.rating;
-          } else {
-            return a.rating - b.rating;
-          }
-        }));
+        return setListings(
+          detailedListings.sort((a, b) => {
+            if (sortOrder === 'highestToLowest') {
+              return b.rating - a.rating;
+            } else {
+              return a.rating - b.rating;
+            }
+          })
+        );
     }
   };
 
@@ -178,20 +181,21 @@ function Home (props) {
   React.useEffect(() => {
     const getListingDetails = async () => {
       try {
-        const listingsData = await Promise.all(listings.map(async (listing) => {
-          const listingData = await getListing(listing.id);
-          if (listing.reviews.length === 0) {
-            listingData.rating = 0;
-          } else {
-            const rating = listing.reviews.reduce((acc, review) => {
-              return acc + review.rating;
+        const listingsData = await Promise.all(
+          listings.map(async (listing) => {
+            const listingData = await getListing(listing.id);
+            if (listing.reviews.length === 0) {
+              listingData.rating = 0;
+            } else {
+              const rating = listing.reviews.reduce((acc, review) => {
+                return acc + review.rating;
+              }, 0);
+              const avgRating = rating / listing.reviews.length;
+              listingData.rating = avgRating;
             }
-            , 0);
-            const avgRating = rating / listing.reviews.length;
-            listingData.rating = avgRating;
-          }
-          return listingData;
-        }));
+            return listingData;
+          })
+        );
         setDetailedListings(listingsData);
       } catch (error) {
         setErrorMessage(error.message);
@@ -321,26 +325,26 @@ function Home (props) {
         handleClose={handleErrorClose}
       />
 
-      {listings.map((listing) => {
-        return (
-          <div key={listing.id}>
-            <HomeListingCard
-              key={listing.id}
-              token={props.token}
-              listingId={listing.id}
-              title={listing.title}
-              street={listing.address.street}
-              city={listing.address.city}
-              state={listing.address.state}
-              postcode={listing.address.postcode}
-              country={listing.address.country}
-              price={listing.price}
-              thumbnail={listing.thumbnail}
-              reviews={listing.reviews}
-            />
-          </div>
-        );
-      })}
+        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+          {listings.map((listing, index) => (
+            <Grid xs={3} sm={4} key={index}>
+              <HomeListingCard
+                key={listing.id}
+                token={props.token}
+                listingId={listing.id}
+                title={listing.title}
+                street={listing.address.street}
+                city={listing.address.city}
+                state={listing.address.state}
+                postcode={listing.address.postcode}
+                country={listing.address.country}
+                price={listing.price}
+                thumbnail={listing.thumbnail}
+                reviews={listing.reviews}
+              />
+            </Grid>
+          ))}
+        </Grid>
     </>
   );
 }

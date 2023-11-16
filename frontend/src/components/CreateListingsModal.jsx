@@ -8,6 +8,7 @@ import ListingCard from './ListingCard';
 import ErrorModal from './ErrorModal';
 import ListingModal from './ListingModal';
 import AvailabilityModal from './AvailabilityModal';
+import Grid from '@mui/system/Unstable_Grid';
 
 // Component for creating a new listing
 function CreateListingsModal (props) {
@@ -569,9 +570,10 @@ function CreateListingsModal (props) {
         handleDateChange={handleDateChange}
       />
 
-      {listings.map((listing) => {
+<Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+      {listings.map((listing, index) => {
         return (
-          <div key={listing.id}>
+          <Grid xs={3} sm={4} key={index}>
             <ListingCard
               key={listing.id}
               token={token}
@@ -596,9 +598,10 @@ function CreateListingsModal (props) {
               published={listing.published}
               handleUnpublishClick={() => handleUnpublishClick(listing.id)}
             />
-          </div>
+            </Grid>
         );
       })}
+      </Grid>
     </>
   );
 }
