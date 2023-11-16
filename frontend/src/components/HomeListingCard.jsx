@@ -6,7 +6,7 @@ function HomeListingCard (props) {
   return (
     <Link to={`/listing/${props.listingId}`}>
       <Card style={{ width: '18rem' }} id={props.listingId}>
-        <Card.Img variant='top' src={props.thumbnail} />
+        <Card.Img variant='top' src={props.thumbnail} alt='thumbnail'/>
         <Card.Body>
           <Card.Title>{props.title}</Card.Title>
           <Card.Text>

@@ -15,7 +15,7 @@ function ListingCard (props) {
 
   return (
     <Card style={{ width: '18rem' }}>
-      <Card.Img variant='top' src={props.thumbnail} />
+      <Card.Img variant='top' src={props.thumbnail} alt='thumbnail'/>
       <Card.Body>
         <Card.Title>{props.title}</Card.Title>
         <Card.Text>
