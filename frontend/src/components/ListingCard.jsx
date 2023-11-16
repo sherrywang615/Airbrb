@@ -35,6 +35,7 @@ function ListingCard (props) {
               ? (
               <Button
                 variant='outline-danger'
+                name='unpublish'
                 size='sm'
                 onClick={props.handleUnpublishClick}>
                 Unpublish
@@ -43,6 +44,7 @@ function ListingCard (props) {
               : (
               <Button
                 variant='outline-info'
+                name='publish'
                 size='sm'
                 onClick={props.handleAvailabilityShow}>
                 Publish
@@ -58,7 +60,8 @@ function ListingCard (props) {
             <Button
               variant='outline-primary'
               size='sm'
-              onClick={props.handleEditShow}>
+              onClick={props.handleEditShow}
+              name='edit-listing'>
               Edit
             </Button>{' '}
             <Button

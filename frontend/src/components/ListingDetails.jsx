@@ -136,7 +136,7 @@ function ListingDetails (props) {
                 )}
           </ListGroup>
           {props.token !== null && (
-            <Button variant='primary' onClick={handleBookingShow}>
+            <Button variant='primary' onClick={handleBookingShow} name='make-booking'>
               Make a booking
             </Button>
           )}

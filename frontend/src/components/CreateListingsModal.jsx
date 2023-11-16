@@ -330,11 +330,6 @@ function CreateListingsModal (props) {
 
   // Call the api to publish a listing
   const handleAvailabilitySubmit = (listingId) => {
-    // const convertedDateRanges = dateRanges.map(range => ({
-    //   start: new Date(range.start).toLocaleDateString(),
-    //   end: new Date(range.end).toLocaleDateString(),
-    // }));
-
     fetch(`http://localhost:5005/listings/publish/${listingId}`, {
       method: 'PUT',
       headers: {
@@ -369,14 +364,9 @@ function CreateListingsModal (props) {
       });
   };
 
-  // Update localStorage when publishedListingIds changes
-  // React.useEffect(() => {
-  //   localStorage.setItem('publishedListingIds', JSON.stringify(publishedListingIds));
-  // }, [publishedListingIds]);
-
   return (
     <>
-      <Button variant='primary' onClick={handleShow}>
+      <Button variant='primary' onClick={handleShow} name="create-new-listing">
         Create a new listing
       </Button>
 
@@ -396,7 +386,7 @@ function CreateListingsModal (props) {
                 onChange={(e) => setTitle(e.target.value)}
               />
             </Form.Group>
-            <Form.Group className='mb-3' controlId='formGridAddress2'>
+            <Form.Group className='mb-3' controlId='formGridStreet'>
               <Form.Label>Street</Form.Label>
               <Form.Control
                 value={street}
@@ -454,7 +444,7 @@ function CreateListingsModal (props) {
                 onChange={(e) => setPrice(e.target.value)}
               />
             </Form.Group>
-            <Form.Group as={Col} controlId='bedrooms'>
+            <Form.Group as={Col} controlId='propertyType'>
                 <Form.Label>Property type:</Form.Label>
                 <Form.Control
                   type='text'

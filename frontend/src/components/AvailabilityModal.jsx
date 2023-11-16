@@ -23,11 +23,13 @@ function AvailabilityModal (props) {
               label={`Start Date ${index + 1}`}
               value={range.start}
               onChange={(newValue) => props.handleDateChange(index, 'start', newValue)}
+              name='start-date'
             />
             <DatePicker
               label={`End Date ${index + 1}`}
               value={range.end}
               onChange={(newValue) => props.handleDateChange(index, 'end', newValue)}
+              name='end-date'
             />
           </div>
         ))}
@@ -38,7 +40,7 @@ function AvailabilityModal (props) {
         <Button variant='secondary' onClick={props.handleClose}>
           Close
         </Button>
-        <Button type='submit' onClick={props.handleAvailabilitySubmit}>
+        <Button type='submit' onClick={props.handleAvailabilitySubmit} name='availability-submit'>
           Submit
         </Button>
       </Modal.Footer>

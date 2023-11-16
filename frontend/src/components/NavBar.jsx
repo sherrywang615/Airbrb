@@ -35,18 +35,18 @@ function NaviationBar (props) {
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='me-auto'>
-              <Nav.Link href='/'>Home</Nav.Link>
+              <Nav.Link href='/' name='home'>Home</Nav.Link>
               {props.token
                 ? (
                 <>
                   <Nav.Link href='/hosted-listings'>View Hosted Listings</Nav.Link>
-                  <Nav.Link onClick={logout}>Logout</Nav.Link>
+                  <Nav.Link onClick={logout} name='logout'>Logout</Nav.Link>
                 </>
                   )
                 : (
                 <>
-                  <Nav.Link href='/login'>Login</Nav.Link>
-                  <Nav.Link href='/register'>Register</Nav.Link>
+                  <Nav.Link href='/login' name='login-nav'>Login</Nav.Link>
+                  <Nav.Link href='/register' name='register-nav'>Register</Nav.Link>
                 </>
                   )}
             </Nav>

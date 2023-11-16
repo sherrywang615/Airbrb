@@ -13,7 +13,7 @@ function ListingModal (props) {
         centered>
         <Modal.Body>
           <Form noValidate validated={props.validated}>
-            <Form.Group className='mb-3' controlId='title'>
+            <Form.Group className='mb-3' controlId='titleEdit'>
               <Form.Label>Title:</Form.Label>
               <Form.Control
                 type='text'
@@ -23,7 +23,7 @@ function ListingModal (props) {
                 onChange={(e) => props.setTitle(e.target.value)}
               />
             </Form.Group>
-            <Form.Group className='mb-3' controlId='formGridAddress2'>
+            <Form.Group className='mb-3' controlId='formGridStreetEdit'>
               <Form.Label>Street</Form.Label>
               <Form.Control
                 value={props.street}
@@ -34,7 +34,7 @@ function ListingModal (props) {
             </Form.Group>
 
             <Row className='mb-4'>
-              <Form.Group as={Col} controlId='formGridCity'>
+              <Form.Group as={Col} controlId='formGridCityEdit'>
                 <Form.Label>City</Form.Label>
                 <Form.Control
                   value={props.city}
@@ -43,7 +43,7 @@ function ListingModal (props) {
                 />
               </Form.Group>
 
-              <Form.Group as={Col} controlId='formGridState'>
+              <Form.Group as={Col} controlId='formGridStateEdit'>
                 <Form.Label>State</Form.Label>
                 <Form.Control
                   value={props.state}
@@ -52,7 +52,7 @@ function ListingModal (props) {
                 />
               </Form.Group>
 
-              <Form.Group as={Col} controlId='formGridPostcode'>
+              <Form.Group as={Col} controlId='formGridPostcodeEdit'>
                 <Form.Label>Postcode</Form.Label>
                 <Form.Control
                   value={props.postcode}
@@ -61,7 +61,7 @@ function ListingModal (props) {
                 />
               </Form.Group>
 
-              <Form.Group as={Col} controlId='formGridCountry'>
+              <Form.Group as={Col} controlId='formGridCountryEdit'>
                 <Form.Label>Country</Form.Label>
                 <Form.Control
                   value={props.country}
@@ -71,7 +71,7 @@ function ListingModal (props) {
               </Form.Group>
             </Row>
             <Row className='mb-3'>
-            <Form.Group as={Col} controlId='price'>
+            <Form.Group as={Col} controlId='priceEdit'>
               <Form.Label>Price (per night):</Form.Label>
               <Form.Control
                 type='text'
@@ -81,7 +81,7 @@ function ListingModal (props) {
                 onChange={(e) => props.setPrice(e.target.value)}
               />
             </Form.Group>
-            <Form.Group as={Col} controlId='bedrooms'>
+            <Form.Group as={Col} controlId='propertyTypeEdit'>
                 <Form.Label>Property type:</Form.Label>
                 <Form.Control
                   type='text'
@@ -92,11 +92,11 @@ function ListingModal (props) {
                 />
               </Form.Group>
             </Row>
-            <Form.Group controlId='formFile' className='mb-3'>
+            <Form.Group controlId='formFileEdit' className='mb-3'>
               <Form.Label>Thumbnail:</Form.Label>
               <Form.Control type='file' required onChange={props.handleFileChange} />
             </Form.Group>
-            <Form.Group className='mb-3' controlId='bathrooms'>
+            <Form.Group className='mb-3' controlId='bathroomsEdit'>
               <Form.Label>Number of bathrooms:</Form.Label>
               <Form.Control
                 type='text'
@@ -107,7 +107,7 @@ function ListingModal (props) {
               />
             </Form.Group>
             <Row className='mb-3'>
-              <Form.Group as={Col} controlId='bedrooms'>
+              <Form.Group as={Col} controlId='bedroomsEdit'>
                 <Form.Label>Number of bedrooms:</Form.Label>
                 <Form.Control
                   type='text'
@@ -118,7 +118,7 @@ function ListingModal (props) {
                 />
               </Form.Group>
 
-              <Form.Group as={Col} controlId='beds'>
+              <Form.Group as={Col} controlId='bedsEdit'>
                 <Form.Label>Number of beds:</Form.Label>
                 <Form.Control
                   type='text'
@@ -129,7 +129,7 @@ function ListingModal (props) {
                 />
               </Form.Group>
             </Row>
-            <Form.Group className='mb-3' controlId='amenities'>
+            <Form.Group className='mb-3' controlId='amenitiesEdit'>
               <Form.Label>Property amenities:</Form.Label>
               <Form.Control
                 type='text'
@@ -148,7 +148,7 @@ function ListingModal (props) {
           <Button variant='secondary' onClick={props.handleClose}>
             Close
           </Button>
-          <Button type='submit' onClick={props.handleSubmit}>
+          <Button type='submit' onClick={props.handleSubmit} name="edit-listing-submit">
             Submit
           </Button>
         </Modal.Footer>

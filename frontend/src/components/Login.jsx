@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import ErrorModal from './ErrorModal';
 import Form from 'react-bootstrap/Form';
 
+// Login component
 function Login (props) {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -14,7 +15,9 @@ function Login (props) {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  // Call the api to login
   const login = (e) => {
+    e.preventDefault();
     fetch('http://localhost:5005/user/auth/login', {
       method: 'POST',
       headers: {
@@ -44,7 +47,7 @@ function Login (props) {
     <>
       <h2>Login</h2>
       <Form>
-        <Form.Group className='mb-3' controlId='formBasicEmail'>
+        <Form.Group className='mb-3' controlId='loginEmail'>
           <Form.Label>Email:</Form.Label>
           <Form.Control
             className='w-50'
@@ -55,7 +58,7 @@ function Login (props) {
           />
         </Form.Group>
 
-        <Form.Group className='mb-3' controlId='formBasicPassword'>
+        <Form.Group className='mb-3' controlId='loginPassword'>
           <Form.Label>Password:</Form.Label>
           <Form.Control
             className='w-50'
@@ -65,7 +68,7 @@ function Login (props) {
             onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Group>
-        <Button variant='primary' type='submit' onClick={login}>
+        <Button variant='primary' type='submit' onClick={login} name='login-button'>
           Login
         </Button>
       </Form>

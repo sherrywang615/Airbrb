@@ -1,25 +1,27 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import ErrorModal from './ErrorModal';
 
+// Registration page
 function Register (props) {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
   const [name, setName] = React.useState('');
-  const [show, setShow] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
+  const [errorShow, setErrorShow] = React.useState(false);
   const navigate = useNavigate();
+  const handleErrorShow = () => setErrorShow(true);
+  const handleErrorClose = () => setErrorShow(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
+  // Register a new user, and navigate to the hosted listings page
   const register = (e) => {
+    e.preventDefault();
     if (password !== confirmPassword) {
       setErrorMessage('Passwords do not match');
-      handleShow();
+      handleErrorShow();
     } else {
       fetch('http://localhost:5005/user/auth/register', {
         method: 'POST',
@@ -33,7 +35,7 @@ function Register (props) {
           if (data.error) {
             console.log(data.error);
             setErrorMessage(data.error);
-            handleShow();
+            handleErrorShow();
           } else {
             if (data.token) {
               localStorage.setItem('token', data.token);
@@ -94,21 +96,16 @@ function Register (props) {
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </Form.Group>
-        <Button variant='primary' type='submit' onClick={register}>
+        <Button variant='primary' type='submit' onClick={register} name='register'>
           Register
         </Button>
       </Form>
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Error</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Login Failed: {errorMessage}</Modal.Body>
-        <Modal.Footer>
-          <Button variant='secondary' onClick={handleClose}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+
+      <ErrorModal
+        errorMessage={errorMessage}
+        show={errorShow}
+        handleClose={handleErrorClose}
+      />
     </>
   );
 }

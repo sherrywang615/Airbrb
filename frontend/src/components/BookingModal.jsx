@@ -58,6 +58,13 @@ function BookingModal (props) {
     }
   };
 
+  // Reset the booking confirmation when the modal is closed
+  React.useEffect(() => {
+    if (props.show) {
+      setBookingConfirmation(false);
+    }
+  }, [props.show]);
+
   return (
     <>
       <Modal
@@ -75,6 +82,7 @@ function BookingModal (props) {
                   label='Start Date'
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
+                  name='startDate'
                 />
               </Col>
               <Col>
@@ -82,6 +90,7 @@ function BookingModal (props) {
                   label='End Date'
                   selected={endDate}
                   onChange={(date) => setEndDate(date)}
+                  name='endDate'
                 />
               </Col>
             </Row>
@@ -92,7 +101,7 @@ function BookingModal (props) {
           <Button variant='secondary' onClick={props.handleBookingClose}>
             Close
           </Button>
-          <Button type='submit' onClick={() => makeBooking(props.listingId)}>
+          <Button type='submit' onClick={() => makeBooking(props.listingId)} name='booking-submit'>
             Submit
           </Button>
         </Modal.Footer>
