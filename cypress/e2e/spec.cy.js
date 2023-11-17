@@ -25,14 +25,14 @@ describe('UI testing', () => {
     cy.get('#amenities').type('pool, kitchen');
     cy.get('#formFile').attachFile('dog.jpeg'); 
     cy.get('.modal-footer').contains('Submit').click();
-    cy.get('.card').find('.card-title').should('contain', 'test20');
+    cy.get('.card').find('.typography').first().should('contain', 'test20');
 
     //updates the thumbnail and title of the listing successfully
     cy.get('button[name="edit-listing"]').click();
     cy.get('#titleEdit').clear().type('Edited title');
     cy.get('#formFileEdit').attachFile('koala.jpeg'); 
     cy.get('button[name="edit-listing-submit"]').click();
-    cy.get('.card').find('.card-title').should('contain', 'Edited title');
+    cy.get('.card').find('.typography').first().should('contain', 'Edited title');
 
     //Publish a listing successfully
     cy.get('button[name="publish"]').click();
@@ -78,7 +78,7 @@ describe('UI testing', () => {
     cy.get('#amenities').type('pool, kitchen');
     cy.get('#formFile').attachFile('dog.jpeg'); 
     cy.get('.modal-footer').contains('Submit').click();
-    cy.get('.card').find('.card-title').should('contain', 'test21');
+    cy.get('.card').find('.typography').first().should('contain', 'test21');
 
     //publish a listing successfully
     cy.get('button[name="publish"]').click();
