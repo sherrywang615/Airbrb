@@ -1,6 +1,6 @@
 describe('UI testing', () => {
   it('Happy path of an admin', () => {
-    //Registers successfully
+    // Registers successfully
     cy.visit('http://localhost:3000/register');
     cy.get('#registerEmail').type('test34@unsw.com');
     cy.get('#registerName').type('test34');
@@ -9,7 +9,7 @@ describe('UI testing', () => {
     cy.get('button[name="register"]').click();
     cy.url().should('include', '/hosted-listing');
 
-    //creates a  new listing successfully
+    // creates a  new listing successfully
     cy.get('button[name="create-new-listing"]').click();
     cy.get('#title').type('test34');
     cy.get('#formGridStreet').type('1 Test Street');
@@ -27,32 +27,32 @@ describe('UI testing', () => {
     cy.get('.modal-footer').contains('Submit').click();
     cy.contains('test34').should('exist');
 
-    //updates the thumbnail and title of the listing successfully
+    // updates the thumbnail and title of the listing successfully
     cy.get('button[name="edit-listing"]').click();
     cy.get('#titleEdit').clear().type('Edited title');
     cy.get('#formFileEdit').attachFile('koala.jpeg');
     cy.get('button[name="edit-listing-submit"]').click();
     cy.contains('Edited title').should('exist');
 
-    //Publish a listing successfully
+    // Publish a listing successfully
     cy.get('button[name="publish"]').click();
-    cy.findByLabelText(`Start Date 1`).click().type('11/10/2023');
-    cy.findByLabelText(`End Date 1`).click().type('11/13/2023');
+    cy.findByLabelText('Start Date 1').click().type('11/10/2023');
+    cy.findByLabelText('End Date 1').click().type('11/13/2023');
     cy.get('button[name="availability-submit"]').click();
     cy.visit('http://localhost:3000');
     cy.contains('Edited title').should('exist');
 
-    //Unpublish a listing successfully
+    // Unpublish a listing successfully
     cy.visit('http://localhost:3000/hosted-listings');
     cy.get('button[name="unpublish"]').click();
     cy.visit('http://localhost:3000');
     cy.contains('Edited title').should('not.exist');
 
-    //logs out successfully
+    // logs out successfully
     cy.get('a[name="logout"]').click();
     cy.url().should('eq', 'http://localhost:3000/');
 
-    //register a new user successfully
+    // register a new user successfully
     cy.get('a[name="register-nav"]').click();
     cy.get('#registerEmail').type('test35@unsw.com');
     cy.get('#registerName').type('test35');
@@ -61,7 +61,7 @@ describe('UI testing', () => {
     cy.get('button[name="register"]').click();
     cy.url().should('include', '/hosted-listing');
 
-    //create a new listing successfully
+    // create a new listing successfully
     cy.visit('http://localhost:3000/hosted-listings');
     cy.get('button[name="create-new-listing"]').click();
     cy.get('#title').type('test35');
@@ -80,24 +80,24 @@ describe('UI testing', () => {
     cy.get('.modal-footer').contains('Submit').click();
     cy.contains('test35').should('exist');
 
-    //publish a listing successfully
+    // publish a listing successfully
     cy.get('button[name="publish"]').click();
     cy.findByLabelText('Start Date 1').click().type('11/10/2023');
     cy.findByLabelText('End Date 1').click().type('11/15/2023');
     cy.get('button[name="availability-submit"]').click();
 
-    //logs out Alice successfully
+    // logs out Alice successfully
     cy.get('a[name="logout"]').click();
     cy.url().should('eq', 'http://localhost:3000/');
 
-    //logs in as user1 successfully
+    // logs in as user1 successfully
     cy.get('a[name="login-nav"]').click();
     cy.get('#loginEmail').type('test34@unsw.com');
     cy.get('#loginPassword').type('test123');
     cy.get('button[name="login-button"]').click();
     cy.url().should('include', '/hosted-listing');
 
-    //make a booking successfully
+    // make a booking successfully
     cy.get('a[name="home"]').click();
     cy.get('a[href^="/listing/"]').first().click();
     cy.get('button[name="make-booking"]').click();
@@ -107,11 +107,11 @@ describe('UI testing', () => {
     cy.contains('Booking Confirmed!').should('exist');
     cy.contains('Close').click();
 
-    //logs out user1 successfully
+    // logs out user1 successfully
     cy.get('a[name="logout"]').click();
     cy.url().should('eq', 'http://localhost:3000/');
 
-    //logs back into the application successfully
+    // logs back into the application successfully
     cy.get('a[name="login-nav"]').click();
     cy.get('#loginEmail').type('test34@unsw.com');
     cy.get('#loginPassword').type('test123');
