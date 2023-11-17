@@ -24,7 +24,7 @@ function HomeListingCard (props) {
         <Typography variant="body1" color="text.secondary">
         {props.street}{' '},{props.city}{' '}, {props.state},{' '}
            {props.postcode}, {props.country}
-           <br />${props.price} /night <br />
+           <br />{props.totalPrice ? `$${props.totalPrice} total` : `$${props.price} /night`}<br />
            {props.reviews.length} {props.reviews.length > 1 ? 'reviews' : 'review'} <br />
         </Typography>
       </CardContent>

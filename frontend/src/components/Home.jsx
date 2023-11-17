@@ -23,7 +23,6 @@ function Home (props) {
   const [selectedParameter, setSelectedParameter] = React.useState('');
   const [detailedListings, setDetailedListings] = React.useState([]);
   const [sortOrder, setSortOrder] = React.useState('');
-  console.log(detailedListings);
 
   const handleParameterChange = (event) => {
     setSelectedParameter(event.target.value);
@@ -56,6 +55,9 @@ function Home (props) {
             return listing.availability.some((range) => {
               const rangeStart = new Date(range.start);
               const rangeEnd = new Date(range.end);
+              const days = Math.ceil((new Date(end) - new Date(start)) / (1000 * 60 * 60 * 24));
+              const totalPrice = listing.price * days;
+              listing.totalPrice = totalPrice;
               return new Date(start) >= rangeStart && new Date(end) <= rangeEnd;
             });
           })
@@ -140,25 +142,6 @@ function Home (props) {
       return data.listing;
     }
   };
-
-  // call the api to get all bookings
-  // const getAllBookings = async () => {
-  //   const res = await fetch('http://localhost:5005/bookings', {
-  //     method: 'GET',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       Authorization: `Bearer ${props.token}`,
-  //     },
-  //   });
-  //   const data = await res.json();
-  //   if (data.error) {
-  //     console.log(data.error);
-  //     setErrorMessage(data.error);
-  //     handleErrorShow();
-  //   } else {
-  //     return data.bookings;
-  //   }
-  // };
 
   // Call getAllListings() when component mounts and sort the listings in alphabetical order
   React.useEffect(() => {
@@ -341,6 +324,7 @@ function Home (props) {
                 price={listing.price}
                 thumbnail={listing.thumbnail}
                 reviews={listing.reviews}
+                totalPrice={listing.totalPrice}
               />
             </Grid>
           ))}
