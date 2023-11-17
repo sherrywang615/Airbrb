@@ -31,7 +31,7 @@ describe('Register', () => {
       </Router>
     );
 
-    // Simulate user input
+    // fill in the form
     fireEvent.change(screen.getByLabelText('Email:'), {
       target: { value: 'test@unsw.com' },
     });
@@ -45,9 +45,8 @@ describe('Register', () => {
       target: { value: 'test123' },
     });
 
-    // Simulate form submission
+    // click register button and check if fetch is called
     fireEvent.click(screen.getByRole('button', { name: 'Register' }));
-
     await waitFor(() => {
       expect(fetch).toHaveBeenCalled();
       expect(setToken).toHaveBeenCalledWith('token');

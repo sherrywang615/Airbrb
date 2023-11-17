@@ -37,9 +37,12 @@ describe('AvailabilityModal', () => {
         handleAvailabilitySubmit={handleAvailabilitySubmit}
         handleDateChange={handleDateChange}
       />);
+    
+    // click submit button and check if handleAvailabilitySubmit is called
     fireEvent.click(screen.getByText('Submit'));
     expect(handleAvailabilitySubmit).toHaveBeenCalled();
 
+    // click close button and check if handleClose is called
     fireEvent.click(screen.getByText('Close'));
     expect(handleClose).toHaveBeenCalled();
   });
