@@ -8,8 +8,11 @@
   },
   "devDependencies": {
     "@testing-library/cypress": "^10.0.1",
+    "@testing-library/jest-dom": "^6.1.4",
+    "@testing-library/react": "^14.1.0",
     "cypress": "^13.5.1",
     "cypress-file-upload": "^5.0.8",
+    "jest": "^29.7.0",
     "react-router-dom": "^6.18.0"
   }
 }

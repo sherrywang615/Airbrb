@@ -1,1 +1,1 @@
-Booking status
+When the user makes a booking request, the status of each booking along with the booking id is shown on the listing page. The status of the bookings is marked with badges with different color and text: Pending-yellow, Accepted-green, Declined-red.

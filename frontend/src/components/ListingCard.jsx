@@ -1,6 +1,4 @@
 import React from 'react';
-// import Card from 'react-bootstrap/Card';
-// import Button from 'react-bootstrap/Button';
 import Rating from '@mui/material/Rating';
 import { Link } from 'react-router-dom';
 import Card from '@mui/material/Card';

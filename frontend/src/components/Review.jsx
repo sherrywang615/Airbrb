@@ -78,7 +78,7 @@ function Review (props) {
         </Modal.Header>
         <Modal.Body>
           <Rating
-            name='simple-controlled'
+            name='rating'
             value={rating}
             required
             onChange={(event, newValue) => {
